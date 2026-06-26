@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: gdg-service-notifications
+  
+  # Désactiver le Config Server
+  cloud:
+    config:
+      enabled: false
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gdg_db
+    username: postgres
+    password: 12345  # ⚠️ METTEZ VOTRE VRAI MOT DE PASSE
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+  
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: true
+        default_schema: notifications_schema
+    open-in-view: false
+  
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: test@example.com
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+            required: false
+
+server:
+  port: 8087
+
+logging:
+  level:
+    com.gdg: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+twilio:
+  account-sid: ${TWILIO_ACCOUNT_SID:}
+  auth-token: ${TWILIO_AUTH_TOKEN:}
+  phone-number: ${TWILIO_PHONE_NUMBER:}
+
+jwt:
+  secret: VotreSecretTresLongEtComplexePourJWT2025GPG
+
+app:
+  notifications:
+    duree-expiration-reservation: 30
+    nb-signalements-confirmation: 2
+    delai-signalement-heures: 2
