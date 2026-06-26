@@ -1,13 +1,14 @@
 package com.gdg.auth.dto;
 
-import lombok.Data;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
 @Data
 public class ResetPasswordRequest {
-    @NotBlank(message = "Le token est obligatoire")
-    private String token;
 
-    @NotBlank(message = "Le nouveau mot de passe est obligatoire")
-    private String newMotDePasse;
+    @NotBlank(message = "Token obligatoire")
+    private String resetToken;
+
+    @NotBlank(message = "Nouveau mot de passe obligatoire")
+    private String nouveauMotDePasse;
 }

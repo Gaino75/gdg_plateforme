@@ -1,48 +1,89 @@
+
 package com.gdg.auth.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "utilisateurs")
-public class Utilisateur {
+@Table(name = "utilisateur", schema = "auth_schema")
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Utilisateur {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String nom;
-    private String prenom;
-    private String email; 
-    private String motDePasse;
-    private String tokenVerification;
-    private boolean emailVerifie;
+    private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(nullable = false, length = 100)
+    private String nom;
+
+    @Column(nullable = false, length = 100)
+    private String prenom;
+
+    @Column(nullable = false, unique = true, length = 150)
+    private String email;
+
+    @Column(name = "mot_de_passe", nullable = false)
+    private String motDePasse;
+
+    @Column(length = 20)
     private String telephone;
 
     @Enumerated(EnumType.STRING)
-    private Statut statut;
+    @Column(nullable = false, length = 20)
+    private Role role;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Statut statut = Statut.ACTIF;
+
+    @Column(name = "date_inscription", nullable = false)
+    private LocalDateTime dateInscription = LocalDateTime.now();
+
+    // Vérification email
+    @Column(name = "email_verifie", nullable = false)
+    private Boolean emailVerifie = false;
+
+    // Token envoyé par email pour vérification
+    @Column(name = "token_verification", length = 255)
+    private String tokenVerification;
+
+    // Date d'expiration du token de vérification
+    @Column(name = "date_expiration_token")
+    private LocalDateTime dateExpirationToken;
+
+    // GETTERS
+    public Long getId() { return id; }
+    public String getNom() { return nom; }
+    public String getPrenom() { return prenom; }
+    public String getEmail() { return email; }
+    public String getMotDePasse() { return motDePasse; }
+    public String getTelephone() { return telephone; }
+    public Role getRole() { return role; }
+    public Statut getStatut() { return statut; }
+    public LocalDateTime getDateInscription() { return dateInscription; }
+    public Boolean getEmailVerifie() { return emailVerifie; }
+    public String getTokenVerification() { return tokenVerification; }
+    public LocalDateTime getDateExpirationToken() { return dateExpirationToken; }
+
+    // SETTERS
+    public void setId(Long id) { this.id = id; }
+    public void setNom(String nom) { this.nom = nom; }
+    public void setPrenom(String prenom) { this.prenom = prenom; }
+    public void setEmail(String email) { this.email = email; }
+    public void setMotDePasse(String motDePasse) { this.motDePasse = motDePasse; }
+    public void setTelephone(String telephone) { this.telephone = telephone; }
+    public void setRole(Role role) { this.role = role; }
+    public void setStatut(Statut statut) { this.statut = statut; }
+    public void setDateInscription(LocalDateTime dateInscription) { this.dateInscription = dateInscription; }
+    public void setEmailVerifie(Boolean emailVerifie) { this.emailVerifie = emailVerifie; }
+    public void setTokenVerification(String tokenVerification) { this.tokenVerification = tokenVerification; }
+    public void setDateExpirationToken(LocalDateTime dateExpirationToken) { this.dateExpirationToken = dateExpirationToken; }
 
     public enum Role {
-        ADMIN, CONSOMMATEUR, DISTRIBUTEUR
+        CONSOMMATEUR, DISTRIBUTEUR, ADMIN
     }
 
     public enum Statut {
-        ACTIF, INACTIF,SUSPEMDU
+        ACTIF, INACTIF, SUSPENDU
     }
 }

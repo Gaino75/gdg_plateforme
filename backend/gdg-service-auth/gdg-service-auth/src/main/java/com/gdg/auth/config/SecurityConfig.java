@@ -2,29 +2,39 @@ package com.gdg.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
-@EnableAspectJAutoProxy
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
-    //Encodeur BCrypt pour les mot de passe
+
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    //autoriser tous les endpoint sans authentification pour l'instant
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http)
+            throws Exception {
         http
-           .csrf(csrf -> csrf.disable())
-           .sessionManagement(session -> session.disable());
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/auth/register/**",
+                    "/auth/logout",
+                    "/auth/login",
+                    "/auth/forgot-password",
+                    "/auth/reset-password",
+                    "/auth/profil",
+                    "/auth/validate",
+                    "/auth/verify-email"
+                ).permitAll()
+                .anyRequest().authenticated()
+            );
         return http.build();
     }
-
-    
 }
