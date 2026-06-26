@@ -1,20 +1,14 @@
 package com.gdg.auth.controller;
 
-import com.gdg.auth.dto.AuthResponse;
-import com.gdg.auth.dto.LoginRequest;
-import com.gdg.auth.dto.RegisterRequest;
-import com.gdg.auth.dto.VerifyEmailRequest;
-import com.gdg.auth.dto.RefreshTokenRequest;
-import com.gdg.auth.dto.ForgotPasswordRequest;
-import com.gdg.auth.dto.ResetPasswordRequest;
-import com.gdg.auth.dto.MessageResponse;
+import com.gdg.auth.dto.*;
 import com.gdg.auth.model.Utilisateur;
 import com.gdg.auth.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -24,112 +18,111 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    // Inscription
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
-        try {
-            AuthResponse response = authService.register(request);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
-        }
+    // ── INSCRIPTION CONSOMMATEUR ──────────────────
+    @PostMapping("/register/consommateur")
+    public ResponseEntity<AuthResponse> registerConsommateur(
+            @Valid @RequestBody RegisterRequest request) {
+        request.setRole(Utilisateur.Role.CONSOMMATEUR);
+        return ResponseEntity.ok(authService.register(request));
     }
 
-    // Connexion
+    // ── INSCRIPTION DISTRIBUTEUR ──────────────────
+    @PostMapping("/register/distributeur")
+    public ResponseEntity<AuthResponse> registerDistributeur(
+            @Valid @RequestBody RegisterRequest request) {
+        request.setRole(Utilisateur.Role.DISTRIBUTEUR);
+        return ResponseEntity.ok(authService.register(request));
+    }
+
+    // ── SETUP PREMIER ADMIN ───────────────────
+@PostMapping("/register/setup")
+public ResponseEntity<?> registerFirstAdmin(
+        @Valid @RequestBody RegisterRequest request) {
+
+    boolean hasAdmin = authService.getAllUsers()
+        .stream()
+        .anyMatch(u -> u.getRole().name().equals("ADMIN"));
+
+    if (hasAdmin) {
+        return ResponseEntity.status(403)
+            .body("Un admin existe déjà");
+    }
+    request.setRole(Utilisateur.Role.ADMIN);
+    return ResponseEntity.ok(authService.register(request));
+}
+// ── INSCRIPTION ADMIN (avec token) ───────
+@PostMapping("/register/admin")
+public ResponseEntity<?> registerAdmin(
+        @RequestHeader("Authorization") String tokenHeader,
+        @Valid @RequestBody RegisterRequest request) {
+
+    String token = tokenHeader.replace("Bearer ", "");
+    if (!authService.validateToken(token)) {
+        return ResponseEntity.status(403).body("Token invalide");
+    }
+    String role = authService.extractRoleFromToken(token);
+    if (!"ADMIN".equals(role)) {
+        return ResponseEntity.status(403).body("Accès refusé");
+    }
+    request.setRole(Utilisateur.Role.ADMIN);
+    return ResponseEntity.ok(authService.register(request));
+}
+    // ── CONNEXION ────────────────────────────────
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
-        try {
-            AuthResponse response = authService.login(request);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<AuthResponse> login(
+            @Valid @RequestBody LoginRequest request,
+            HttpServletRequest httpRequest) {
+        // Récupérer l'IP du client
+        String ip = httpRequest.getRemoteAddr();
+        return ResponseEntity.ok(authService.login(request, ip));
     }
 
-    // Valider token
-    @GetMapping("/validate")  
-    public ResponseEntity<Boolean> validate(@RequestHeader("Authorization") String token) {
-        String jwt = token.replace("Bearer ", "").trim();
-        boolean isvalid = authService.validateToken(jwt);
-        return ResponseEntity.ok(isvalid);
-    }    
-
-    // Vérifier l'adresse email après inscription
-    @PostMapping("/verify-email")
-    public ResponseEntity<?> verifyEmail(@RequestParam(required = false) String token, @RequestBody(required = false) VerifyEmailRequest request) {
-        if (request == null) {
-            request = new VerifyEmailRequest();
-        }
-        if (token != null) {
-            request.setToken(token);
-        }
-        if (request.getToken() == null) {
-            return ResponseEntity.badRequest().body("Le token est obligatoire");
-        }
-        try {
-            MessageResponse response = authService.verifyEmail(request.getToken());
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    // ── DECONNEXION ──────────────────────────────
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(
+            @RequestHeader("Authorization") String token,
+            @RequestHeader("UserId") Long userId) {
+        String jwt = token.replace("Bearer ", "");
+        return ResponseEntity.ok(authService.logout(jwt, userId));
     }
 
-    // Renouveler le token JWT
-    @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
-        try {
-            AuthResponse response = authService.refreshToken(request.getRefreshToken());
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    // ── VALIDER TOKEN ────────────────────────────
+    @GetMapping("/validate")
+    public ResponseEntity<Boolean> validate(
+            @RequestHeader("Authorization") String token) {
+        String jwt = token.replace("Bearer ", "");
+        return ResponseEntity.ok(authService.validateToken(jwt));
     }
 
-    // Demande de réinitialisation de mot de passe (oublie)
+    // ── VERIFY EMAIL ─────────────────────────────
+    @GetMapping("/verify-email")
+    public ResponseEntity<String> verifyEmail(
+            @RequestParam String token) {
+        return ResponseEntity.ok(authService.verifyEmail(token));
+    }
+
+    // ── PROFIL ───────────────────────────────────
+    @GetMapping("/profil")
+    public ResponseEntity<ProfilResponse> getProfil(
+            @RequestHeader("Authorization") String token) {
+        String email = authService.extractEmailFromToken(
+            token.replace("Bearer ", ""));
+        return ResponseEntity.ok(authService.getProfil(email));
+    }
+
+    // ── FORGOT PASSWORD ──────────────────────────
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
-        try {
-            MessageResponse response = authService.forgotPassword(request.getEmail());
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<String> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request) {
+        return ResponseEntity.ok(
+            authService.forgotPassword(request));
     }
 
-    // Enregistrer le nouveau mot de passe
+    // ── RESET PASSWORD ───────────────────────────
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
-        try {
-            MessageResponse response = authService.resetPassword(request.getToken(), request.getNewMotDePasse());
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    // --- ENDPOINTS POUR COMMUNICATION MICROSERVICES (SERVICE ADMIN) ---
-    @GetMapping("/admin/users")
-    public ResponseEntity<Object> getAllUsers() {
-        return ResponseEntity.ok(authService.getAllUsers());
-    }
-
-    @PutMapping("/admin/users/{id}/suspend")
-    public ResponseEntity<?> suspendUser(@PathVariable Long id) {
-        try {
-            Utilisateur user = authService.suspendUser(id);
-            return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @DeleteMapping("/admin/users/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        try {
-            authService.deleteUser(id);
-            return ResponseEntity.ok().body("Utilisateur supprimé avec succès");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<String> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request) {
+        return ResponseEntity.ok(
+            authService.resetPassword(request));
     }
 }

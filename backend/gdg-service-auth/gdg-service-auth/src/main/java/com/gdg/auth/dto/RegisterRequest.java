@@ -1,35 +1,39 @@
 package com.gdg.auth.dto;
-import lombok.Data;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Email;
+
 import com.gdg.auth.model.Utilisateur;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import java.time.LocalDate;
 
 @Data
 public class RegisterRequest {
-    
-    @NotBlank(message = "Le nom est obligatoire")
+
+    @NotBlank(message = "Nom obligatoire")
     private String nom;
 
-    @NotBlank(message = "Le prénom est obligatoire")
+    @NotBlank(message = "Prénom obligatoire")
     private String prenom;
 
-    @NotBlank(message = "L'email est obligatoire")
-    @Email(message = "L'email n'est pas valide")
+    @NotBlank(message = "Email obligatoire")
+    @Email(message = "Email invalide")
     private String email;
 
-    @NotBlank(message = "Le mot de passe est obligatoire")
+    @NotBlank(message = "Mot de passe obligatoire")
     private String motDePasse;
 
+    private String telephone;
 
+    // Défini automatiquement par l'endpoint
     private Utilisateur.Role role;
 
-    @NotBlank(message = "Le téléphone est obligatoire")
-    private String telephone;
-    
-    
+    // Consommateur seulement
+    private String villeResidence;
+    private LocalDate dateNaissance;
 
+    // Distributeur seulement
+    private String poste;
 
-
-    
+    // Admin seulement
+    private String niveauAcces;
 }

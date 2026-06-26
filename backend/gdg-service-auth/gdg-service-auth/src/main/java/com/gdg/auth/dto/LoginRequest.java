@@ -1,17 +1,16 @@
 package com.gdg.auth.dto;
 
-import lombok.Data;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
 @Data
 public class LoginRequest {
 
-    @NotBlank(message = "L'email est obligatoire")
-    @Email(message = "L'email n'est pas valide")
+    @NotBlank(message = "Email obligatoire")
+    @Email(message = "Email invalide")
     private String email;
 
-    @NotBlank(message = "Le mot de passe est obligatoire")
+    @NotBlank(message = "Mot de passe obligatoire")
     private String motDePasse;
-
 }
