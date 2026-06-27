@@ -1,0 +1,169 @@
+package com.gdg.service_agences.service;
+
+import com.gdg.service_agences.model.Agence;
+import com.gdg.service_agences.model.Agence.StatutAgence;
+import com.gdg.service_agences.model.Enseigne;
+import com.gdg.service_agences.model.Ville;
+import com.gdg.service_agences.repository.AgenceRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class AgenceService {
+
+    private final AgenceRepository agenceRepository;
+    private final EnseigneService enseigneService;
+    private final VilleService villeService;
+
+    // Créer une nouvelle agence (en attente de validation)
+    @Transactional
+    public Agence creerAgence(Agence agence, Long enseigneId, Long villeId) {
+        Enseigne enseigne = enseigneService.getEnseigneById(enseigneId);
+        Ville ville = villeService.getVilleById(villeId);
+
+        agence.setEnseigne(enseigne);
+        agence.setVille(ville);
+        agence.setStatut(StatutAgence.EN_ATTENTE);
+        agence.setDateCreation(LocalDateTime.now());
+
+        return agenceRepository.save(agence);
+    }
+
+    // Récupérer toutes les agences
+    public List<Agence> getAllAgences() {
+        return agenceRepository.findAll();
+    }
+
+    // Récupérer toutes les agences avec leurs horaires
+    public List<Agence> getAllAgencesWithHoraires() {
+        return agenceRepository.findAll();
+    }
+
+    // Récupérer les agences actives
+    public List<Agence> getAgencesActives() {
+        return agenceRepository.findByStatut(StatutAgence.ACTIF);
+    }
+
+    // Récupérer les agences actives avec leurs horaires
+    public List<Agence> getAgencesActivesWithHoraires() {
+        return agenceRepository.findAllByStatutWithHoraires(StatutAgence.ACTIF);
+    }
+
+    // Récupérer une agence par son ID
+    public Agence getAgenceById(Long id) {
+        return agenceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Agence non trouvée avec l'id : " + id));
+    }
+
+    // Récupérer une agence avec ses horaires
+    public Agence getAgenceByIdWithHoraires(Long id) {
+        return agenceRepository.findByIdWithHoraires(id)
+                .orElseThrow(() -> new RuntimeException("Agence non trouvée avec l'id : " + id));
+    }
+
+    // Récupérer les agences d'une enseigne
+    public List<Agence> getAgencesByEnseigne(Long enseigneId) {
+        Enseigne enseigne = enseigneService.getEnseigneById(enseigneId);
+        return agenceRepository.findByEnseigne(enseigne);
+    }
+
+    // Récupérer les agences actives d'une enseigne
+    public List<Agence> getAgencesActivesByEnseigne(Long enseigneId) {
+        Enseigne enseigne = enseigneService.getEnseigneById(enseigneId);
+        return agenceRepository.findByStatutAndEnseigne(StatutAgence.ACTIF, enseigne);
+    }
+
+    // Récupérer les agences dans une ville
+    public List<Agence> getAgencesByVille(Long villeId) {
+        Ville ville = villeService.getVilleById(villeId);
+        return agenceRepository.findByVille(ville);
+    }
+
+    // Récupérer les agences actives dans une ville
+    public List<Agence> getAgencesActivesByVille(Long villeId) {
+        Ville ville = villeService.getVilleById(villeId);
+        return agenceRepository.findByStatutAndVille(StatutAgence.ACTIF, ville);
+    }
+
+    // Récupérer les agences d'une enseigne dans une ville
+    public List<Agence> getAgencesByEnseigneAndVille(Long enseigneId, Long villeId) {
+        Enseigne enseigne = enseigneService.getEnseigneById(enseigneId);
+        Ville ville = villeService.getVilleById(villeId);
+        return agenceRepository.findByEnseigneAndVille(enseigne, ville);
+    }
+
+    // Récupérer les agences en attente (pour l'admin)
+    public List<Agence> getAgencesEnAttente() {
+        return agenceRepository.findByStatutOrderByDateCreationAsc(StatutAgence.EN_ATTENTE);
+    }
+
+    // Valider une agence (par l'administrateur)
+    @Transactional
+    public Agence validerAgence(Long id, Long adminId) {
+        Agence agence = getAgenceById(id);
+        agence.setStatut(StatutAgence.ACTIF);
+        agence.setDateValidation(LocalDateTime.now());
+        agence.setValidePar(adminId);
+        return agenceRepository.save(agence);
+    }
+
+    // Suspendre une agence
+    @Transactional
+    public Agence suspendreAgence(Long id) {
+        Agence agence = getAgenceById(id);
+        agence.setStatut(StatutAgence.SUSPENDU);
+        return agenceRepository.save(agence);
+    }
+
+    // Réactiver une agence
+    @Transactional
+    public Agence reactiverAgence(Long id) {
+        Agence agence = getAgenceById(id);
+        agence.setStatut(StatutAgence.ACTIF);
+        return agenceRepository.save(agence);
+    }
+
+    // Mettre à jour une agence
+    @Transactional
+    public Agence updateAgence(Long id, Agence agenceDetails) {
+        Agence agence = getAgenceById(id);
+        agence.setNom(agenceDetails.getNom());
+        agence.setAdresse(agenceDetails.getAdresse());
+        agence.setLatitude(agenceDetails.getLatitude());
+        agence.setLongitude(agenceDetails.getLongitude());
+        agence.setTelephone(agenceDetails.getTelephone());
+        agence.setEmail(agenceDetails.getEmail());
+        agence.setLogoFacture(agenceDetails.getLogoFacture());
+        agence.setEnteteFacture(agenceDetails.getEnteteFacture());
+        agence.setPiedFacture(agenceDetails.getPiedFacture());
+        return agenceRepository.save(agence);
+    }
+
+    // Recherche par nom
+    public List<Agence> rechercherParNom(String nom) {
+        return agenceRepository.findByNomContainingIgnoreCase(nom);
+    }
+
+    // Statistiques
+    public long compterAgences() {
+        return agenceRepository.count();
+    }
+
+    public long compterAgencesActives() {
+        return agenceRepository.countByStatut(StatutAgence.ACTIF);
+    }
+
+    public long compterAgencesEnAttente() {
+        return agenceRepository.countByStatut(StatutAgence.EN_ATTENTE);
+    }
+
+    public long compterAgencesParEnseigne(Long enseigneId) {
+        Enseigne enseigne = enseigneService.getEnseigneById(enseigneId);
+        return agenceRepository.countByEnseigne(enseigne);
+    }
+}
