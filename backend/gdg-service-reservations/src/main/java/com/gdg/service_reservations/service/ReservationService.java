@@ -6,8 +6,6 @@ import com.gdg.service_reservations.model.Reservation.ModePaiement;
 import com.gdg.service_reservations.model.Reservation.StatutReservation;
 import com.gdg.service_reservations.repository.HistoriqueReservationRepository;
 import com.gdg.service_reservations.repository.ReservationRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +15,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -26,105 +22,94 @@ public class ReservationService {
 
     private static final DateTimeFormatter REF_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HHmmss");
 
-    /**
-     * Génère une référence unique pour une réservation
-     * Format: RES-2025-000001
-     */
+    // ============================================================
+    // CONSTRUCTEUR (remplace @RequiredArgsConstructor)
+    // ============================================================
+
+    public ReservationService(ReservationRepository reservationRepository,
+                              HistoriqueReservationRepository historiqueReservationRepository) {
+        this.reservationRepository = reservationRepository;
+        this.historiqueReservationRepository = historiqueReservationRepository;
+    }
+
+    // ============================================================
+    // MÉTHODES
+    // ============================================================
+
     private String genererReference() {
         long count = reservationRepository.count() + 1;
         return String.format("RES-%d-%06d", LocalDateTime.now().getYear(), count);
     }
 
-    /**
-     * Créer une nouvelle réservation
-     */
+
     @Transactional
     public Reservation creerReservation(Long agenceId, Long consommateurId,
-                                        Long categorieProduitId, Integer quantite,
-                                        Double prixUnitaire, Double montantTotal,
-                                        ModePaiement modePaiement) {
+                                    Long categorieProduitId, Integer quantite,
+                                    ModePaiement modePaiement) {
 
-        // Vérifier si le consommateur a déjà une réservation active
-        if (reservationRepository.hasActiveReservation(consommateurId, agenceId, categorieProduitId)) {
-            throw new RuntimeException("Vous avez déjà une réservation active pour ce produit dans cette agence");
-        }
-
-        // Créer la réservation
-        String reference = genererReference();
-        Reservation reservation = new Reservation(
-            reference,
-            agenceId,
-            consommateurId,
-            categorieProduitId,
-            quantite,
-            prixUnitaire,
-            montantTotal,
-            modePaiement
-        );
-
-        Reservation saved = reservationRepository.save(reservation);
-
-        // Enregistrer l'historique
-        HistoriqueReservation historique = new HistoriqueReservation(
-            saved.getId(),
-            null,
-            StatutReservation.EN_ATTENTE.name(),
-            "Création de la réservation",
-            consommateurId
-        );
-        historiqueReservationRepository.save(historique);
-
-        log.info("✅ Réservation créée : {} pour le consommateur {}", reference, consommateurId);
-        return saved;
+    if (reservationRepository.hasActiveReservation(consommateurId, agenceId, categorieProduitId)) {
+        throw new RuntimeException("Vous avez déjà une réservation active pour ce produit dans cette agence");
     }
 
-    /**
-     * Récupérer une réservation par son ID
-     */
+    // ⚠️ ICI tu dois récupérer le prix unitaire depuis le service Stock
+    // Pour l'instant, on utilise une valeur par défaut
+    // Plus tard, tu feras un appel HTTP au service Stock
+    Double prixUnitaire = 2500.0;  // ← À remplacer par appel au service Stock
+    Double montantTotal = prixUnitaire * quantite;
+
+    String reference = genererReference();
+    Reservation reservation = new Reservation(
+        reference,
+        agenceId,
+        consommateurId,
+        categorieProduitId,
+        quantite,
+        prixUnitaire,
+        montantTotal,
+        modePaiement
+    );
+
+    Reservation saved = reservationRepository.save(reservation);
+
+    HistoriqueReservation historique = new HistoriqueReservation(
+        saved.getId(),
+        null,
+        StatutReservation.EN_ATTENTE.name(),
+        "Création de la réservation",
+        consommateurId
+    );
+    historiqueReservationRepository.save(historique);
+
+    System.out.println("✅ Réservation créée : " + reference + " pour le consommateur " + consommateurId);
+    return saved;
+    }
+
     public Reservation getReservationById(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Réservation non trouvée avec l'id : " + id));
     }
 
-    /**
-     * Récupérer une réservation par sa référence
-     */
     public Reservation getReservationByReference(String reference) {
         return reservationRepository.findByReferenceReservation(reference)
                 .orElseThrow(() -> new RuntimeException("Réservation non trouvée avec la référence : " + reference));
     }
 
-    /**
-     * Récupérer toutes les réservations d'un consommateur
-     */
     public List<Reservation> getReservationsByConsommateur(Long consommateurId) {
         return reservationRepository.findByConsommateurIdOrderByDateReservationDesc(consommateurId);
     }
 
-    /**
-     * Récupérer les réservations actives d'un consommateur
-     */
     public List<Reservation> getReservationsActivesByConsommateur(Long consommateurId) {
         return reservationRepository.findByConsommateurIdAndStatut(consommateurId, StatutReservation.EN_ATTENTE);
     }
 
-    /**
-     * Récupérer toutes les réservations d'une agence
-     */
     public List<Reservation> getReservationsByAgence(Long agenceId) {
         return reservationRepository.findByAgenceIdOrderByDateReservationDesc(agenceId);
     }
 
-    /**
-     * Récupérer les réservations par statut
-     */
     public List<Reservation> getReservationsByStatut(StatutReservation statut) {
         return reservationRepository.findByStatut(statut);
     }
 
-    /**
-     * Confirmer le paiement d'une réservation
-     */
     @Transactional
     public Reservation confirmerPaiement(Long reservationId, String referencePaiement) {
         Reservation reservation = getReservationById(reservationId);
@@ -135,7 +120,7 @@ public class ReservationService {
         if (reservation.getStatut() == StatutReservation.ANNULEE) {
             throw new RuntimeException("Cette réservation a été annulée");
         }
-        if (reservation.getStatut() == StatutReservation.PAYEE || 
+        if (reservation.getStatut() == StatutReservation.PAYEE ||
             reservation.getStatut() == StatutReservation.CONFIRMEE) {
             throw new RuntimeException("Cette réservation a déjà été payée");
         }
@@ -147,7 +132,6 @@ public class ReservationService {
 
         Reservation saved = reservationRepository.save(reservation);
 
-        // Enregistrer l'historique
         HistoriqueReservation historique = new HistoriqueReservation(
             saved.getId(),
             ancienStatut,
@@ -157,13 +141,10 @@ public class ReservationService {
         );
         historiqueReservationRepository.save(historique);
 
-        log.info("✅ Paiement confirmé pour la réservation {}", reservation.getReferenceReservation());
+        System.out.println("✅ Paiement confirmé pour la réservation " + reservation.getReferenceReservation());
         return saved;
     }
 
-    /**
-     * Confirmer la disponibilité (par le distributeur)
-     */
     @Transactional
     public Reservation confirmerDisponibilite(Long reservationId, Long distributeurId) {
         Reservation reservation = getReservationById(reservationId);
@@ -186,13 +167,10 @@ public class ReservationService {
         );
         historiqueReservationRepository.save(historique);
 
-        log.info("✅ Disponibilité confirmée pour la réservation {}", reservation.getReferenceReservation());
+        System.out.println("✅ Disponibilité confirmée pour la réservation " + reservation.getReferenceReservation());
         return saved;
     }
 
-    /**
-     * Marquer une réservation comme récupérée (par le client)
-     */
     @Transactional
     public Reservation marquerRecuperee(Long reservationId, Long consommateurId) {
         Reservation reservation = getReservationById(reservationId);
@@ -216,13 +194,10 @@ public class ReservationService {
         );
         historiqueReservationRepository.save(historique);
 
-        log.info("✅ Gaz récupéré pour la réservation {}", reservation.getReferenceReservation());
+        System.out.println("✅ Gaz récupéré pour la réservation " + reservation.getReferenceReservation());
         return saved;
     }
 
-    /**
-     * Annuler une réservation (par le client ou le système)
-     */
     @Transactional
     public Reservation annulerReservation(Long reservationId, String motif, Long effectuePar) {
         Reservation reservation = getReservationById(reservationId);
@@ -249,35 +224,25 @@ public class ReservationService {
         );
         historiqueReservationRepository.save(historique);
 
-        log.info("❌ Réservation annulée : {}", reservation.getReferenceReservation());
+        System.out.println("❌ Réservation annulée : " + reservation.getReferenceReservation());
         return saved;
     }
 
-    /**
-     * Tâche programmée : Expirer les réservations en attente
-     * S'exécute toutes les 5 minutes
-     */
-    @Scheduled(fixedDelay = 300000) // 5 minutes
+    @Scheduled(fixedDelay = 300000)
     @Transactional
     public void expirerReservations() {
         LocalDateTime now = LocalDateTime.now();
         int nbExpirees = reservationRepository.updateExpiredReservations(now);
 
         if (nbExpirees > 0) {
-            log.info("⏰ {} réservations expirées automatiquement", nbExpirees);
+            System.out.println("⏰ " + nbExpirees + " réservations expirées automatiquement");
         }
     }
 
-    /**
-     * Récupérer l'historique d'une réservation
-     */
     public List<HistoriqueReservation> getHistoriqueReservation(Long reservationId) {
         return historiqueReservationRepository.findByReservationIdOrderByDateChangementDesc(reservationId);
     }
 
-    /**
-     * Statistiques
-     */
     public long compterReservations() {
         return reservationRepository.count();
     }

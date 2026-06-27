@@ -1,15 +1,11 @@
 package com.gdg.service_agences.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "enseigne", schema = "agences_schema")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Enseigne {
 
     @Id
@@ -41,7 +37,6 @@ public class Enseigne {
     @Column(name = "date_creation", nullable = false)
     private LocalDateTime dateCreation = LocalDateTime.now();
 
-    // Relation : une enseigne a plusieurs agences
     @OneToMany(mappedBy = "enseigne", cascade = CascadeType.ALL)
     private List<Agence> agences;
 
@@ -49,7 +44,8 @@ public class Enseigne {
         ACTIF, INACTIF
     }
 
-    // Constructeur pratique
+    public Enseigne() {}
+
     public Enseigne(String nom, String logo, String description, String siteWeb, String telephone, String emailContact) {
         this.nom = nom;
         this.logo = logo;
@@ -60,4 +56,35 @@ public class Enseigne {
         this.statut = StatutEnseigne.ACTIF;
         this.dateCreation = LocalDateTime.now();
     }
+
+    // Getters et Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getNom() { return nom; }
+    public void setNom(String nom) { this.nom = nom; }
+
+    public String getLogo() { return logo; }
+    public void setLogo(String logo) { this.logo = logo; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getSiteWeb() { return siteWeb; }
+    public void setSiteWeb(String siteWeb) { this.siteWeb = siteWeb; }
+
+    public String getTelephone() { return telephone; }
+    public void setTelephone(String telephone) { this.telephone = telephone; }
+
+    public String getEmailContact() { return emailContact; }
+    public void setEmailContact(String emailContact) { this.emailContact = emailContact; }
+
+    public StatutEnseigne getStatut() { return statut; }
+    public void setStatut(StatutEnseigne statut) { this.statut = statut; }
+
+    public LocalDateTime getDateCreation() { return dateCreation; }
+    public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
+
+    public List<Agence> getAgences() { return agences; }
+    public void setAgences(List<Agence> agences) { this.agences = agences; }
 }

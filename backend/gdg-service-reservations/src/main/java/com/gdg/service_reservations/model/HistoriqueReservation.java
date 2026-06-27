@@ -1,14 +1,10 @@
 package com.gdg.service_reservations.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "historique_reservation", schema = "reservations_schema")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class HistoriqueReservation {
 
     @Id
@@ -33,7 +29,12 @@ public class HistoriqueReservation {
     @Column(name = "date_changement", nullable = false)
     private LocalDateTime dateChangement = LocalDateTime.now();
 
-    // Constructeur pratique
+    // ============================================================
+    // CONSTRUCTEURS
+    // ============================================================
+
+    public HistoriqueReservation() {}
+
     public HistoriqueReservation(Long reservationId, String ancienStatut, String nouveauStatut,
                                  String commentaire, Long effectuePar) {
         this.reservationId = reservationId;
@@ -43,4 +44,29 @@ public class HistoriqueReservation {
         this.effectuePar = effectuePar;
         this.dateChangement = LocalDateTime.now();
     }
+
+    // ============================================================
+    // GETTERS ET SETTERS
+    // ============================================================
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Long getReservationId() { return reservationId; }
+    public void setReservationId(Long reservationId) { this.reservationId = reservationId; }
+
+    public String getAncienStatut() { return ancienStatut; }
+    public void setAncienStatut(String ancienStatut) { this.ancienStatut = ancienStatut; }
+
+    public String getNouveauStatut() { return nouveauStatut; }
+    public void setNouveauStatut(String nouveauStatut) { this.nouveauStatut = nouveauStatut; }
+
+    public String getCommentaire() { return commentaire; }
+    public void setCommentaire(String commentaire) { this.commentaire = commentaire; }
+
+    public Long getEffectuePar() { return effectuePar; }
+    public void setEffectuePar(Long effectuePar) { this.effectuePar = effectuePar; }
+
+    public LocalDateTime getDateChangement() { return dateChangement; }
+    public void setDateChangement(LocalDateTime dateChangement) { this.dateChangement = dateChangement; }
 }

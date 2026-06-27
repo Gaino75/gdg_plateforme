@@ -1,172 +1,300 @@
 package com.gdg.service_agences.controller;
 
+import com.gdg.service_agences.dto.*;
 import com.gdg.service_agences.model.Agence;
-import com.gdg.service_agences.model.Agence.StatutAgence;
+import com.gdg.service_agences.model.Enseigne;
+import com.gdg.service_agences.model.HoraireOuverture;
+import com.gdg.service_agences.model.Ville;
 import com.gdg.service_agences.service.AgenceService;
-import lombok.RequiredArgsConstructor;
+import com.gdg.service_agences.service.EnseigneService;
+import com.gdg.service_agences.service.VilleService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/agences")
-@RequiredArgsConstructor
 public class AgenceController {
 
     private final AgenceService agenceService;
+    private final EnseigneService enseigneService;
+    private final VilleService villeService;
 
-    // GET /api/agences
+    // ============================================================
+    // CONSTRUCTEUR (remplace @RequiredArgsConstructor)
+    // ============================================================
+
+    public AgenceController(AgenceService agenceService, EnseigneService enseigneService, VilleService villeService) {
+        this.agenceService = agenceService;
+        this.enseigneService = enseigneService;
+        this.villeService = villeService;
+    }
+
+    // ============================================================
+    // LISTES
+    // ============================================================
+
     @GetMapping
-    public ResponseEntity<List<Agence>> getAllAgences() {
-        return ResponseEntity.ok(agenceService.getAllAgences());
+    public ResponseEntity<List<AgenceSummary>> getAllAgences() {
+        List<Agence> agences = agenceService.getAllAgences();
+        List<AgenceSummary> summaries = agences.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    // GET /api/agences/actives
     @GetMapping("/actives")
-    public ResponseEntity<List<Agence>> getAgencesActives() {
-        return ResponseEntity.ok(agenceService.getAgencesActives());
+    public ResponseEntity<List<AgenceSummary>> getAgencesActives() {
+        List<Agence> agences = agenceService.getAgencesActives();
+        List<AgenceSummary> summaries = agences.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    // GET /api/agences/actives/avec-horaires
-    @GetMapping("/actives/avec-horaires")
-    public ResponseEntity<List<Agence>> getAgencesActivesWithHoraires() {
-        return ResponseEntity.ok(agenceService.getAgencesActivesWithHoraires());
-    }
-
-    // GET /api/agences/en-attente
     @GetMapping("/en-attente")
-    public ResponseEntity<List<Agence>> getAgencesEnAttente() {
-        return ResponseEntity.ok(agenceService.getAgencesEnAttente());
+    public ResponseEntity<List<AgenceSummary>> getAgencesEnAttente() {
+        List<Agence> agences = agenceService.getAgencesEnAttente();
+        List<AgenceSummary> summaries = agences.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    // GET /api/agences/{id}
+    // ============================================================
+    // DÉTAIL
+    // ============================================================
+
     @GetMapping("/{id}")
-    public ResponseEntity<Agence> getAgenceById(@PathVariable Long id) {
-        return ResponseEntity.ok(agenceService.getAgenceById(id));
+    public ResponseEntity<AgenceResponse> getAgenceById(@PathVariable Long id) {
+        Agence agence = agenceService.getAgenceByIdWithHoraires(id);
+        return ResponseEntity.ok(mapToResponse(agence));
     }
 
-    // GET /api/agences/{id}/avec-horaires
-    @GetMapping("/{id}/avec-horaires")
-    public ResponseEntity<Agence> getAgenceByIdWithHoraires(@PathVariable Long id) {
-        return ResponseEntity.ok(agenceService.getAgenceByIdWithHoraires(id));
-    }
+    // ============================================================
+    // RECHERCHES
+    // ============================================================
 
-    // GET /api/agences/enseigne/{enseigneId}
     @GetMapping("/enseigne/{enseigneId}")
-    public ResponseEntity<List<Agence>> getAgencesByEnseigne(@PathVariable Long enseigneId) {
-        return ResponseEntity.ok(agenceService.getAgencesByEnseigne(enseigneId));
+    public ResponseEntity<List<AgenceSummary>> getAgencesByEnseigne(@PathVariable Long enseigneId) {
+        List<Agence> agences = agenceService.getAgencesByEnseigne(enseigneId);
+        List<AgenceSummary> summaries = agences.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    // GET /api/agences/enseigne/{enseigneId}/actives
     @GetMapping("/enseigne/{enseigneId}/actives")
-    public ResponseEntity<List<Agence>> getAgencesActivesByEnseigne(@PathVariable Long enseigneId) {
-        return ResponseEntity.ok(agenceService.getAgencesActivesByEnseigne(enseigneId));
+    public ResponseEntity<List<AgenceSummary>> getAgencesActivesByEnseigne(@PathVariable Long enseigneId) {
+        List<Agence> agences = agenceService.getAgencesActivesByEnseigne(enseigneId);
+        List<AgenceSummary> summaries = agences.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    // GET /api/agences/ville/{villeId}
     @GetMapping("/ville/{villeId}")
-    public ResponseEntity<List<Agence>> getAgencesByVille(@PathVariable Long villeId) {
-        return ResponseEntity.ok(agenceService.getAgencesByVille(villeId));
+    public ResponseEntity<List<AgenceSummary>> getAgencesByVille(@PathVariable Long villeId) {
+        List<Agence> agences = agenceService.getAgencesByVille(villeId);
+        List<AgenceSummary> summaries = agences.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    // GET /api/agences/ville/{villeId}/actives
     @GetMapping("/ville/{villeId}/actives")
-    public ResponseEntity<List<Agence>> getAgencesActivesByVille(@PathVariable Long villeId) {
-        return ResponseEntity.ok(agenceService.getAgencesActivesByVille(villeId));
+    public ResponseEntity<List<AgenceSummary>> getAgencesActivesByVille(@PathVariable Long villeId) {
+        List<Agence> agences = agenceService.getAgencesActivesByVille(villeId);
+        List<AgenceSummary> summaries = agences.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    // GET /api/agences/enseigne/{enseigneId}/ville/{villeId}
     @GetMapping("/enseigne/{enseigneId}/ville/{villeId}")
-    public ResponseEntity<List<Agence>> getAgencesByEnseigneAndVille(
+    public ResponseEntity<List<AgenceSummary>> getAgencesByEnseigneAndVille(
             @PathVariable Long enseigneId,
             @PathVariable Long villeId) {
-        return ResponseEntity.ok(agenceService.getAgencesByEnseigneAndVille(enseigneId, villeId));
+        List<Agence> agences = agenceService.getAgencesByEnseigneAndVille(enseigneId, villeId);
+        List<AgenceSummary> summaries = agences.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    // GET /api/agences/recherche?nom=total
     @GetMapping("/recherche")
-    public ResponseEntity<List<Agence>> rechercherParNom(@RequestParam String nom) {
-        return ResponseEntity.ok(agenceService.rechercherParNom(nom));
+    public ResponseEntity<List<AgenceSummary>> rechercherParNom(@RequestParam String nom) {
+        List<Agence> agences = agenceService.rechercherParNom(nom);
+        List<AgenceSummary> summaries = agences.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    // POST /api/agences
+    // ============================================================
+    // CRÉATION
+    // ============================================================
+
     @PostMapping
-    public ResponseEntity<Agence> creerAgence(@Valid @RequestBody AgenceCreationRequest request) {
+    public ResponseEntity<AgenceResponse> creerAgence(@Valid @RequestBody AgenceRequest request) {
+        Enseigne enseigne = enseigneService.getEnseigneById(request.getEnseigneId());
+        Ville ville = villeService.getVilleById(request.getVilleId());
+
         Agence agence = new Agence(
             request.getNom(),
             request.getAdresse(),
-            null,  // sera défini par le service
-            null,  // sera défini par le service
+            enseigne,
+            ville,
             request.getTelephone(),
             request.getEmail()
         );
+        agence.setLatitude(request.getLatitude());
+        agence.setLongitude(request.getLongitude());
+
         Agence nouvelleAgence = agenceService.creerAgence(agence, request.getEnseigneId(), request.getVilleId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(nouvelleAgence);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapToResponse(nouvelleAgence));
     }
 
-    // PUT /api/agences/{id}/valider
+    // ============================================================
+    // GESTION DES STATUTS
+    // ============================================================
+
     @PutMapping("/{id}/valider")
-    public ResponseEntity<Agence> validerAgence(
+    public ResponseEntity<AgenceResponse> validerAgence(
             @PathVariable Long id,
             @RequestParam Long adminId) {
-        return ResponseEntity.ok(agenceService.validerAgence(id, adminId));
+        Agence agence = agenceService.validerAgence(id, adminId);
+        return ResponseEntity.ok(mapToResponse(agence));
     }
 
-    // PUT /api/agences/{id}/suspendre
     @PutMapping("/{id}/suspendre")
-    public ResponseEntity<Agence> suspendreAgence(@PathVariable Long id) {
-        return ResponseEntity.ok(agenceService.suspendreAgence(id));
+    public ResponseEntity<AgenceResponse> suspendreAgence(@PathVariable Long id) {
+        Agence agence = agenceService.suspendreAgence(id);
+        return ResponseEntity.ok(mapToResponse(agence));
     }
 
-    // PUT /api/agences/{id}/reactiver
     @PutMapping("/{id}/reactiver")
-    public ResponseEntity<Agence> reactiverAgence(@PathVariable Long id) {
-        return ResponseEntity.ok(agenceService.reactiverAgence(id));
+    public ResponseEntity<AgenceResponse> reactiverAgence(@PathVariable Long id) {
+        Agence agence = agenceService.reactiverAgence(id);
+        return ResponseEntity.ok(mapToResponse(agence));
     }
 
-    // PUT /api/agences/{id}
+    // ============================================================
+    // MISE À JOUR
+    // ============================================================
+
     @PutMapping("/{id}")
-    public ResponseEntity<Agence> updateAgence(
+    public ResponseEntity<AgenceResponse> updateAgence(
             @PathVariable Long id,
-            @Valid @RequestBody Agence agence) {
-        return ResponseEntity.ok(agenceService.updateAgence(id, agence));
+            @Valid @RequestBody AgenceUpdateRequest request) {
+        Agence agenceDetails = new Agence();
+        agenceDetails.setNom(request.getNom());
+        agenceDetails.setAdresse(request.getAdresse());
+        agenceDetails.setLatitude(request.getLatitude());
+        agenceDetails.setLongitude(request.getLongitude());
+        agenceDetails.setTelephone(request.getTelephone());
+        agenceDetails.setEmail(request.getEmail());
+        agenceDetails.setLogoFacture(request.getLogoFacture());
+        agenceDetails.setEnteteFacture(request.getEnteteFacture());
+        agenceDetails.setPiedFacture(request.getPiedFacture());
+
+        Agence updated = agenceService.updateAgence(id, agenceDetails);
+        return ResponseEntity.ok(mapToResponse(updated));
     }
 
-    // GET /api/agences/statistiques
+    // ============================================================
+    // STATISTIQUES
+    // ============================================================
+
     @GetMapping("/statistiques")
-    public ResponseEntity<Map<String, Long>> getStatistiques() {
-        return ResponseEntity.ok(Map.of(
-            "total", agenceService.compterAgences(),
-            "actives", agenceService.compterAgencesActives(),
-            "enAttente", agenceService.compterAgencesEnAttente()
-        ));
+    public ResponseEntity<AgenceStatistiquesResponse> getStatistiques() {
+        AgenceStatistiquesResponse stats = new AgenceStatistiquesResponse(
+            agenceService.compterAgences(),
+            agenceService.compterAgencesActives(),
+            agenceService.compterAgencesEnAttente(),
+            agenceService.compterAgences() - agenceService.compterAgencesActives() - agenceService.compterAgencesEnAttente(),
+            enseigneService.getAllEnseignes().size(),
+            villeService.getAllVilles().size()
+        );
+        return ResponseEntity.ok(stats);
     }
-}
 
-// DTO pour la création d'agence
-class AgenceCreationRequest {
-    private String nom;
-    private String adresse;
-    private String telephone;
-    private String email;
-    private Long enseigneId;
-    private Long villeId;
+    // ============================================================
+    // MÉTHODES DE MAPPING
+    // ============================================================
 
-    // Getters et Setters
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
-    public String getAdresse() { return adresse; }
-    public void setAdresse(String adresse) { this.adresse = adresse; }
-    public String getTelephone() { return telephone; }
-    public void setTelephone(String telephone) { this.telephone = telephone; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public Long getEnseigneId() { return enseigneId; }
-    public void setEnseigneId(Long enseigneId) { this.enseigneId = enseigneId; }
-    public Long getVilleId() { return villeId; }
-    public void setVilleId(Long villeId) { this.villeId = villeId; }
+    private AgenceSummary mapToSummary(Agence agence) {
+        return new AgenceSummary(
+            agence.getId(),
+            agence.getNom(),
+            agence.getAdresse(),
+            agence.getTelephone(),
+            agence.getEmail(),
+            agence.getStatut(),
+            agence.getEnseigne() != null ? agence.getEnseigne().getNom() : null,
+            agence.getVille() != null ? agence.getVille().getNom() : null,
+            agence.getVille() != null ? agence.getVille().getRegion() : null
+        );
+    }
+
+    private AgenceResponse mapToResponse(Agence agence) {
+        EnseigneSummary enseigneSummary = null;
+        if (agence.getEnseigne() != null) {
+            enseigneSummary = new EnseigneSummary(
+                agence.getEnseigne().getId(),
+                agence.getEnseigne().getNom(),
+                agence.getEnseigne().getLogo(),
+                agence.getEnseigne().getStatut(),
+                agence.getEnseigne().getAgences() != null ? (long) agence.getEnseigne().getAgences().size() : 0L
+            );
+        }
+
+        VilleSummary villeSummary = null;
+        if (agence.getVille() != null) {
+            villeSummary = new VilleSummary(
+                agence.getVille().getId(),
+                agence.getVille().getNom(),
+                agence.getVille().getRegion(),
+                agence.getVille().getPays()
+            );
+        }
+
+        List<HoraireOuvertureDTO> horairesDTO = new ArrayList<>();
+        if (agence.getHoraires() != null) {
+            horairesDTO = agence.getHoraires().stream()
+                .map(h -> new HoraireOuvertureDTO(
+                    h.getJourSemaine(),
+                    h.getHeureOuverture(),
+                    h.getHeureFermeture(),
+                    h.getFerme()
+                ))
+                .collect(Collectors.toList());
+        }
+
+        return AgenceResponse.builder()
+                .id(agence.getId())
+                .nom(agence.getNom())
+                .adresse(agence.getAdresse())
+                .latitude(agence.getLatitude())
+                .longitude(agence.getLongitude())
+                .telephone(agence.getTelephone())
+                .email(agence.getEmail())
+                .logoFacture(agence.getLogoFacture())
+                .enteteFacture(agence.getEnteteFacture())
+                .piedFacture(agence.getPiedFacture())
+                .statut(agence.getStatut())
+                .dateCreation(agence.getDateCreation())
+                .dateValidation(agence.getDateValidation())
+                .validePar(agence.getValidePar())
+                .enseigne(enseigneSummary)
+                .ville(villeSummary)
+                .horaires(horairesDTO)
+                .build();
+    }
 }

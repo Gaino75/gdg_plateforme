@@ -1,112 +1,102 @@
 package com.gdg.service_reservations.controller;
 
+import com.gdg.service_reservations.dto.*;
 import com.gdg.service_reservations.model.HistoriqueReservation;
 import com.gdg.service_reservations.model.Reservation;
-import com.gdg.service_reservations.model.Reservation.ModePaiement;
 import com.gdg.service_reservations.model.Reservation.StatutReservation;
 import com.gdg.service_reservations.service.ReservationService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/reservations")
-@RequiredArgsConstructor
 public class ReservationController {
 
     private final ReservationService reservationService;
 
     // ============================================================
+    // CONSTRUCTEUR (remplace @RequiredArgsConstructor)
+    // ============================================================
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
+
+    // ============================================================
     // CRÉATION
     // ============================================================
 
-    /**
-     * POST /api/reservations
-     * Créer une nouvelle réservation
-     */
     @PostMapping
-    public ResponseEntity<Reservation> creerReservation(@Valid @RequestBody CreerReservationRequest request) {
-        Reservation reservation = reservationService.creerReservation(
-            request.getAgenceId(),
-            request.getConsommateurId(),
-            request.getCategorieProduitId(),
-            request.getQuantite(),
-            request.getPrixUnitaire(),
-            request.getMontantTotal(),
-            request.getModePaiement()
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(reservation);
+    public ResponseEntity<ReservationResponse> creerReservation(@Valid @RequestBody ReservationRequest request) {
+    Reservation reservation = reservationService.creerReservation(
+        request.getAgenceId(),
+        request.getConsommateurId(),
+        request.getCategorieProduitId(),
+        request.getQuantite(),
+        request.getModePaiement()
+    );
+    return ResponseEntity.status(HttpStatus.CREATED).body(mapToResponse(reservation));
     }
+
+    
 
     // ============================================================
     // CONSULTATION
     // ============================================================
 
-    /**
-     * GET /api/reservations/{id}
-     * Récupérer une réservation par son ID
-     */
     @GetMapping("/{id}")
-    public ResponseEntity<Reservation> getReservationById(@PathVariable Long id) {
-        return ResponseEntity.ok(reservationService.getReservationById(id));
+    public ResponseEntity<ReservationResponse> getReservationById(@PathVariable Long id) {
+        Reservation reservation = reservationService.getReservationById(id);
+        return ResponseEntity.ok(mapToResponse(reservation));
     }
 
-    /**
-     * GET /api/reservations/reference/{reference}
-     * Récupérer une réservation par sa référence
-     */
     @GetMapping("/reference/{reference}")
-    public ResponseEntity<Reservation> getReservationByReference(@PathVariable String reference) {
-        return ResponseEntity.ok(reservationService.getReservationByReference(reference));
+    public ResponseEntity<ReservationResponse> getReservationByReference(@PathVariable String reference) {
+        Reservation reservation = reservationService.getReservationByReference(reference);
+        return ResponseEntity.ok(mapToResponse(reservation));
     }
 
-    /**
-     * GET /api/reservations/consommateur/{consommateurId}
-     * Récupérer toutes les réservations d'un consommateur
-     */
     @GetMapping("/consommateur/{consommateurId}")
-    public ResponseEntity<List<Reservation>> getReservationsByConsommateur(@PathVariable Long consommateurId) {
-        return ResponseEntity.ok(reservationService.getReservationsByConsommateur(consommateurId));
+    public ResponseEntity<List<ReservationSummary>> getReservationsByConsommateur(@PathVariable Long consommateurId) {
+        List<Reservation> reservations = reservationService.getReservationsByConsommateur(consommateurId);
+        List<ReservationSummary> summaries = reservations.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    /**
-     * GET /api/reservations/consommateur/{consommateurId}/actives
-     * Récupérer les réservations actives d'un consommateur
-     */
     @GetMapping("/consommateur/{consommateurId}/actives")
-    public ResponseEntity<List<Reservation>> getReservationsActivesByConsommateur(@PathVariable Long consommateurId) {
-        return ResponseEntity.ok(reservationService.getReservationsActivesByConsommateur(consommateurId));
+    public ResponseEntity<List<ReservationSummary>> getReservationsActivesByConsommateur(@PathVariable Long consommateurId) {
+        List<Reservation> reservations = reservationService.getReservationsActivesByConsommateur(consommateurId);
+        List<ReservationSummary> summaries = reservations.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    /**
-     * GET /api/reservations/agence/{agenceId}
-     * Récupérer toutes les réservations d'une agence
-     */
     @GetMapping("/agence/{agenceId}")
-    public ResponseEntity<List<Reservation>> getReservationsByAgence(@PathVariable Long agenceId) {
-        return ResponseEntity.ok(reservationService.getReservationsByAgence(agenceId));
+    public ResponseEntity<List<ReservationSummary>> getReservationsByAgence(@PathVariable Long agenceId) {
+        List<Reservation> reservations = reservationService.getReservationsByAgence(agenceId);
+        List<ReservationSummary> summaries = reservations.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    /**
-     * GET /api/reservations/statut/{statut}
-     * Récupérer les réservations par statut
-     */
     @GetMapping("/statut/{statut}")
-    public ResponseEntity<List<Reservation>> getReservationsByStatut(@PathVariable StatutReservation statut) {
-        return ResponseEntity.ok(reservationService.getReservationsByStatut(statut));
+    public ResponseEntity<List<ReservationSummary>> getReservationsByStatut(@PathVariable StatutReservation statut) {
+        List<Reservation> reservations = reservationService.getReservationsByStatut(statut);
+        List<ReservationSummary> summaries = reservations.stream()
+                .map(this::mapToSummary)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(summaries);
     }
 
-    /**
-     * GET /api/reservations/{id}/historique
-     * Récupérer l'historique d'une réservation
-     */
     @GetMapping("/{id}/historique")
     public ResponseEntity<List<HistoriqueReservation>> getHistoriqueReservation(@PathVariable Long id) {
         return ResponseEntity.ok(reservationService.getHistoriqueReservation(id));
@@ -116,126 +106,100 @@ public class ReservationController {
     // GESTION DES STATUTS
     // ============================================================
 
-    /**
-     * PUT /api/reservations/{id}/paiement
-     * Confirmer le paiement d'une réservation
-     */
     @PutMapping("/{id}/paiement")
-    public ResponseEntity<Reservation> confirmerPaiement(
+    public ResponseEntity<ReservationResponse> confirmerPaiement(
             @PathVariable Long id,
             @RequestParam String referencePaiement) {
-        return ResponseEntity.ok(reservationService.confirmerPaiement(id, referencePaiement));
+        Reservation reservation = reservationService.confirmerPaiement(id, referencePaiement);
+        return ResponseEntity.ok(mapToResponse(reservation));
     }
 
-    /**
-     * PUT /api/reservations/{id}/confirmer-disponibilite
-     * Confirmer la disponibilité (par le distributeur)
-     */
     @PutMapping("/{id}/confirmer-disponibilite")
-    public ResponseEntity<Reservation> confirmerDisponibilite(
+    public ResponseEntity<ReservationResponse> confirmerDisponibilite(
             @PathVariable Long id,
             @RequestParam Long distributeurId) {
-        return ResponseEntity.ok(reservationService.confirmerDisponibilite(id, distributeurId));
+        Reservation reservation = reservationService.confirmerDisponibilite(id, distributeurId);
+        return ResponseEntity.ok(mapToResponse(reservation));
     }
 
-    /**
-     * PUT /api/reservations/{id}/recuperer
-     * Marquer une réservation comme récupérée
-     */
     @PutMapping("/{id}/recuperer")
-    public ResponseEntity<Reservation> marquerRecuperee(
+    public ResponseEntity<ReservationResponse> marquerRecuperee(
             @PathVariable Long id,
             @RequestParam Long consommateurId) {
-        return ResponseEntity.ok(reservationService.marquerRecuperee(id, consommateurId));
+        Reservation reservation = reservationService.marquerRecuperee(id, consommateurId);
+        return ResponseEntity.ok(mapToResponse(reservation));
     }
 
-    /**
-     * PUT /api/reservations/{id}/annuler
-     * Annuler une réservation
-     */
     @PutMapping("/{id}/annuler")
-    public ResponseEntity<Reservation> annulerReservation(
+    public ResponseEntity<ReservationResponse> annulerReservation(
             @PathVariable Long id,
             @RequestParam String motif,
             @RequestParam Long effectuePar) {
-        return ResponseEntity.ok(reservationService.annulerReservation(id, motif, effectuePar));
+        Reservation reservation = reservationService.annulerReservation(id, motif, effectuePar);
+        return ResponseEntity.ok(mapToResponse(reservation));
     }
 
     // ============================================================
     // STATISTIQUES
     // ============================================================
 
-    /**
-     * GET /api/reservations/statistiques
-     * Statistiques globales des réservations
-     */
     @GetMapping("/statistiques")
-    public ResponseEntity<Map<String, Long>> getStatistiques() {
-        return ResponseEntity.ok(Map.of(
-            "total", reservationService.compterReservations(),
-            "enAttente", reservationService.compterReservationsParStatut(StatutReservation.EN_ATTENTE),
-            "payees", reservationService.compterReservationsParStatut(StatutReservation.PAYEE),
-            "confirmees", reservationService.compterReservationsParStatut(StatutReservation.CONFIRMEE),
-            "annulees", reservationService.compterReservationsParStatut(StatutReservation.ANNULEE),
-            "expirees", reservationService.compterReservationsParStatut(StatutReservation.EXPIREE),
-            "recuperees", reservationService.compterReservationsParStatut(StatutReservation.RECUPEREE)
-        ));
+    public ResponseEntity<ReservationStatistiquesResponse> getStatistiques() {
+        ReservationStatistiquesResponse stats = new ReservationStatistiquesResponse(
+            reservationService.compterReservations(),
+            reservationService.compterReservationsParStatut(StatutReservation.EN_ATTENTE),
+            reservationService.compterReservationsParStatut(StatutReservation.PAYEE),
+            reservationService.compterReservationsParStatut(StatutReservation.CONFIRMEE),
+            reservationService.compterReservationsParStatut(StatutReservation.ANNULEE),
+            reservationService.compterReservationsParStatut(StatutReservation.EXPIREE),
+            reservationService.compterReservationsParStatut(StatutReservation.RECUPEREE)
+        );
+        return ResponseEntity.ok(stats);
     }
 
-    /**
-     * GET /api/reservations/agence/{agenceId}/statistiques
-     * Statistiques des réservations d'une agence
-     */
     @GetMapping("/agence/{agenceId}/statistiques")
-    public ResponseEntity<Map<String, Long>> getStatistiquesParAgence(@PathVariable Long agenceId) {
-        return ResponseEntity.ok(Map.of(
-            "total", reservationService.compterReservationsParAgence(agenceId)
-        ));
+    public ResponseEntity<Long> getStatistiquesParAgence(@PathVariable Long agenceId) {
+        return ResponseEntity.ok(reservationService.compterReservationsParAgence(agenceId));
     }
 
     // ============================================================
-    // DTO DE CRÉATION
+    // MÉTHODES DE MAPPING
     // ============================================================
 
-    public static class CreerReservationRequest {
-        @NotNull(message = "L'ID de l'agence est obligatoire")
-        private Long agenceId;
+    private ReservationResponse mapToResponse(Reservation reservation) {
+        return ReservationResponse.builder()
+                .id(reservation.getId())
+                .referenceReservation(reservation.getReferenceReservation())
+                .agenceId(reservation.getAgenceId())
+                .consommateurId(reservation.getConsommateurId())
+                .categorieProduitId(reservation.getCategorieProduitId())
+                .quantite(reservation.getQuantite())
+                .prixUnitaire(reservation.getPrixUnitaire())
+                .montantTotal(reservation.getMontantTotal())
+                .statut(reservation.getStatut())
+                .modePaiement(reservation.getModePaiement())
+                .referencePaiement(reservation.getReferencePaiement())
+                .dateReservation(reservation.getDateReservation())
+                .dateExpiration(reservation.getDateExpiration())
+                .dateConfirmation(reservation.getDateConfirmation())
+                .dateRecuperation(reservation.getDateRecuperation())
+                .motifAnnulation(reservation.getMotifAnnulation())
+                .observations(reservation.getObservations())
+                .build();
+    }
 
-        @NotNull(message = "L'ID du consommateur est obligatoire")
-        private Long consommateurId;
-
-        @NotNull(message = "L'ID de la catégorie produit est obligatoire")
-        private Long categorieProduitId;
-
-        @NotNull(message = "La quantité est obligatoire")
-        @Min(value = 1, message = "La quantité doit être supérieure à 0")
-        private Integer quantite;
-
-        @NotNull(message = "Le prix unitaire est obligatoire")
-        @Min(value = 0, message = "Le prix unitaire doit être positif")
-        private Double prixUnitaire;
-
-        @NotNull(message = "Le montant total est obligatoire")
-        @Min(value = 0, message = "Le montant total doit être positif")
-        private Double montantTotal;
-
-        @NotNull(message = "Le mode de paiement est obligatoire")
-        private ModePaiement modePaiement;
-
-        // Getters et Setters
-        public Long getAgenceId() { return agenceId; }
-        public void setAgenceId(Long agenceId) { this.agenceId = agenceId; }
-        public Long getConsommateurId() { return consommateurId; }
-        public void setConsommateurId(Long consommateurId) { this.consommateurId = consommateurId; }
-        public Long getCategorieProduitId() { return categorieProduitId; }
-        public void setCategorieProduitId(Long categorieProduitId) { this.categorieProduitId = categorieProduitId; }
-        public Integer getQuantite() { return quantite; }
-        public void setQuantite(Integer quantite) { this.quantite = quantite; }
-        public Double getPrixUnitaire() { return prixUnitaire; }
-        public void setPrixUnitaire(Double prixUnitaire) { this.prixUnitaire = prixUnitaire; }
-        public Double getMontantTotal() { return montantTotal; }
-        public void setMontantTotal(Double montantTotal) { this.montantTotal = montantTotal; }
-        public ModePaiement getModePaiement() { return modePaiement; }
-        public void setModePaiement(ModePaiement modePaiement) { this.modePaiement = modePaiement; }
+    private ReservationSummary mapToSummary(Reservation reservation) {
+        return new ReservationSummary(
+            reservation.getId(),
+            reservation.getReferenceReservation(),
+            reservation.getAgenceId(),
+            reservation.getCategorieProduitId(),
+            reservation.getQuantite(),
+            reservation.getMontantTotal(),
+            reservation.getStatut(),
+            reservation.getModePaiement(),
+            reservation.getDateReservation(),
+            reservation.getDateExpiration()
+        );
     }
 }
