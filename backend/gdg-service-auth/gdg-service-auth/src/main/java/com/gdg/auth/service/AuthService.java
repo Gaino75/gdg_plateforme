@@ -101,6 +101,7 @@ private RabbitTemplate rabbitTemplate;
              RabbitMQConfig.EXCHANGE,
             RabbitMQConfig.KEY_USER_REGISTERED,
             new UserRegisteredEvent(
+              utilisateur.getId(),
               utilisateur.getEmail(),
             utilisateur.getNom(),
              utilisateur.getPrenom(),

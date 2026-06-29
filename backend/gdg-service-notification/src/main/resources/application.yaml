@@ -10,7 +10,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/gdg_auth
     username: postgres
-    password: JOJOloj  # ⚠️ METTEZ VOTRE VRAI MOT DE PASSE
+    password: JOJOloj   # ⚠️ METTEZ VOTRE VRAI MOT DE PASSE
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -19,7 +19,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
+    properties: 
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
@@ -31,20 +31,20 @@ spring:
     host: localhost
     port: 5672
     username: guest
-    password: guest  
+    password: guest
   
   mail:
     host: smtp.gmail.com
     port: 587
-    username: test@example.com
-    password: test
+    username: sagemeliodas@gmail.com
+    password: apqa zjir ifjm ryxg
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-            required: true
+            required: 
 
 server:
   port: 8087

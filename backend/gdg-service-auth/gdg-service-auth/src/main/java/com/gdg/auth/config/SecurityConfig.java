@@ -31,7 +31,9 @@ public class SecurityConfig {
                     "/auth/reset-password",
                     "/auth/profil",
                     "/auth/validate",
-                    "/auth/verify-email"
+                    "/auth/verify-email",
+                    "/auth/internal/**",
+                    "/auth/admin/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             );

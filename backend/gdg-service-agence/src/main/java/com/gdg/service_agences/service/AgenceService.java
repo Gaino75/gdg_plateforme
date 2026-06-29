@@ -1,5 +1,6 @@
 package com.gdg.service_agences.service;
 
+import com.gdg.service_agences.client.AuthClient;
 import com.gdg.service_agences.model.Agence;
 import com.gdg.service_agences.model.Agence.StatutAgence;
 import com.gdg.service_agences.model.Enseigne;
@@ -17,15 +18,14 @@ public class AgenceService {
     private final AgenceRepository agenceRepository;
     private final EnseigneService enseigneService;
     private final VilleService villeService;
+    private final AuthClient authClient;
 
-    // ============================================================
-    // CONSTRUCTEUR (remplace @RequiredArgsConstructor)
-    // ============================================================
-
-    public AgenceService(AgenceRepository agenceRepository, EnseigneService enseigneService, VilleService villeService) {
+    public AgenceService(AgenceRepository agenceRepository, EnseigneService enseigneService,
+                         VilleService villeService, AuthClient authClient) {
         this.agenceRepository = agenceRepository;
         this.enseigneService = enseigneService;
         this.villeService = villeService;
+        this.authClient = authClient;
     }
 
     // ============================================================
@@ -111,6 +111,28 @@ public class AgenceService {
     }
 
     @Transactional
+    public void rejeterAgence(Long id) {
+        Agence agence = getAgenceById(id);
+        if (agence.getStatut() != StatutAgence.EN_ATTENTE) {
+            throw new RuntimeException("Seules les agences en attente peuvent être rejetées");
+        }
+        try {
+            authClient.retirerLienAgence(id);
+        } catch (Exception ignored) {
+            // Aucun distributeur lié
+        }
+        agenceRepository.delete(agence);
+    }
+
+    @Transactional
+    public Agence creerAgenceParDistributeur(Agence agence, Long enseigneId,
+                                             Long villeId, Long distributeurId) {
+        Agence saved = creerAgence(agence, enseigneId, villeId);
+        authClient.lierDistributeurAgence(distributeurId, saved.getId());
+        return saved;
+    }
+
+    @Transactional
     public Agence suspendreAgence(Long id) {
         Agence agence = getAgenceById(id);
         agence.setStatut(StatutAgence.SUSPENDU);
@@ -159,4 +181,6 @@ public class AgenceService {
         Enseigne enseigne = enseigneService.getEnseigneById(enseigneId);
         return agenceRepository.countByEnseigne(enseigne);
     }
+
+   
 }

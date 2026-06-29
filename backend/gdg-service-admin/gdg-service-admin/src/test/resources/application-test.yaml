@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:admin_test;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        default_schema: admin_schema
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+
+gdg:
+  agences:
+    url: http://localhost:8082
+  auth:
+    url: http://localhost:8081
