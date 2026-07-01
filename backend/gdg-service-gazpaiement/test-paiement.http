@@ -1,0 +1,25 @@
+### Créer un paiement
+POST http://localhost:8083/api/paiements
+Content-Type: application/json
+
+{
+  "commandeId": 1,
+  "clientId": 5,
+  "montant": 15000,
+  "modePaiement": "MOBILE_MONEY"
+}
+
+### Lister tous les paiements
+GET http://localhost:8083/api/paiements
+
+### Récupérer un paiement par id (remplace 1 par l'id réel)
+GET http://localhost:8083/api/paiements/1
+
+### Paiements d'un client (remplace 5 par l'id réel)
+GET http://localhost:8083/api/paiements/client/5
+
+### Valider un paiement (remplace 1 par l'id réel)
+PUT http://localhost:8083/api/paiements/1/valider
+
+### Annuler un paiement (remplace 1 par l'id réel)
+PUT http://localhost:8083/api/paiements/1/annuler
