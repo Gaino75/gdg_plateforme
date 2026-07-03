@@ -1,10 +1,15 @@
 package com.gdg.auth.service;
 
+import com.gdg.auth.config.RabbitMQConfig;
 import com.gdg.auth.dto.*;
+import com.gdg.auth.event.PasswordResetEvent;
+import com.gdg.auth.event.UserRegisteredEvent;
 import com.gdg.auth.model.*;
 import com.gdg.auth.repository.*;
 import com.gdg.auth.security.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +34,10 @@ public class AuthService {
 
     @Autowired
     private TentativeConnexionRepository tentativeConnexionRepository;
+
+    @Autowired
+private RabbitTemplate rabbitTemplate;
+
 
     // ── INSCRIPTION ──────────────────────────────
     public AuthResponse register(RegisterRequest request) {
@@ -85,8 +94,21 @@ public class AuthService {
         // Sauvegarder
         utilisateurRepository.save(utilisateur);
 
-        // TODO: Envoyer email via Service Notifications
+        //  Envoyer email via Service Notifications
         // notificationService.envoyerEmailVerification(email, tokenVerif)
+        // Publier événement inscription
+       rabbitTemplate.convertAndSend(
+             RabbitMQConfig.EXCHANGE,
+            RabbitMQConfig.KEY_USER_REGISTERED,
+            new UserRegisteredEvent(
+              utilisateur.getId(),
+              utilisateur.getEmail(),
+            utilisateur.getNom(),
+             utilisateur.getPrenom(),
+            utilisateur.getRole().name(),
+            utilisateur.getTokenVerification()
+    )
+);
 
         // Générer JWT
         String token = jwtUtil.generateToken(
@@ -251,8 +273,19 @@ public class AuthService {
             LocalDateTime.now().plusMinutes(15));
         utilisateurRepository.save(utilisateur);
 
-        // TODO: Envoyer email via Service Notifications
+        //  Envoyer email via Service Notifications
         // Ex: http://gpg.cm/reset-password?token=resetToken
+
+        // Publier événement reset password
+rabbitTemplate.convertAndSend(
+    RabbitMQConfig.EXCHANGE,
+    RabbitMQConfig.KEY_PASSWORD_RESET,
+    new PasswordResetEvent(
+        utilisateur.getEmail(),
+        utilisateur.getNom(),
+        resetToken
+    )
+);
 
         return "Token de reset : " + resetToken;
     }
@@ -287,7 +320,7 @@ public class AuthService {
         return jwtUtil.extractEmail(token);
     }
 
-    public List<Utilisateur> getAllUsers() {
+    public List<Utilisateur> getAllUtilisateurs() {
         return utilisateurRepository.findAll();
     }
        // ── METHODE PRIVEE : Enregistrer tentative ────
@@ -306,4 +339,38 @@ public class AuthService {
     public String extractRoleFromToken(String token) {
         return jwtUtil.extractRole(token);
     }
+
+//suspendre un utilisateur
+    public String suspendreUtilisateur(long id, String motif) {
+        Utilisateur utilisateur=utilisateurRepository.findById(id)
+                                                      .orElseThrow(()->new RuntimeException("utilisateur non trouver"));
+        utilisateur.setStatut(Utilisateur.Statut.SUSPENDU);
+        utilisateurRepository.save(utilisateur);
+        return "Utilisateur suspendu.Motif:" + motif ;
+        
+    }
+
+//Reactive un utilisateur
+    public String reactiverUtilisateur(long id) {
+         Utilisateur utilisateur=utilisateurRepository.findById(id)
+                                                      .orElseThrow(()->new RuntimeException("utilisateur non trouver"));
+        utilisateur.setStatut(Utilisateur.Statut.ACTIF);
+        utilisateurRepository.save(utilisateur);
+        return "Utilisateur reactiver avec succes";
+        
+        
+    }
+
+
+    public String supprimerUtilisateur(Long id) {
+         Utilisateur utilisateur=utilisateurRepository.findById(id)
+                                                      .orElseThrow(()->new RuntimeException("utilisateur non trouver"));
+        utilisateur.setStatut(Utilisateur.Statut.ACTIF);
+        utilisateurRepository.delete(utilisateur);
+        return "Utilisateur supprimer avec succes";
+        
+        
+    }
+
+    
 }       

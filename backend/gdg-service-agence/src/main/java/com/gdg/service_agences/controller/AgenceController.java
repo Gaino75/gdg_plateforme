@@ -161,6 +161,30 @@ public class AgenceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mapToResponse(nouvelleAgence));
     }
 
+    @PostMapping("/distributeur")
+    public ResponseEntity<AgenceResponse> creerAgenceParDistributeur(
+            @RequestHeader("X-Distributeur-Id") Long distributeurId,
+            @Valid @RequestBody AgenceRequest request) {
+        Enseigne enseigne = enseigneService.getEnseigneById(request.getEnseigneId());
+        Ville ville = villeService.getVilleById(request.getVilleId());
+
+        Agence agence = new Agence(
+            request.getNom(),
+            request.getAdresse(),
+            enseigne,
+            ville,
+            request.getTelephone(),
+            request.getEmail()
+        );
+        agence.setLatitude(request.getLatitude());
+        agence.setLongitude(request.getLongitude());
+
+        Agence nouvelleAgence = agenceService.creerAgenceParDistributeur(
+            agence, request.getEnseigneId(), request.getVilleId(), distributeurId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapToResponse(nouvelleAgence));
+    }
+
     // ============================================================
     // GESTION DES STATUTS
     // ============================================================
@@ -173,6 +197,13 @@ public class AgenceController {
         return ResponseEntity.ok(mapToResponse(agence));
     }
 
+    @PutMapping("/{id}/rejeter")
+    public ResponseEntity<Void> rejeterAgence(@PathVariable Long id) {
+        agenceService.rejeterAgence(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    
     @PutMapping("/{id}/suspendre")
     public ResponseEntity<AgenceResponse> suspendreAgence(@PathVariable Long id) {
         Agence agence = agenceService.suspendreAgence(id);

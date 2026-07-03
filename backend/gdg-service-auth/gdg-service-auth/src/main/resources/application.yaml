@@ -8,15 +8,19 @@ spring:
     config:
       enabled: false
   datasource:
-    url: 
-    username: 
-    password: 
-    driver-class-name: 
+    url: jdbc:postgresql://localhost:5432/gdg_auth
+    username: postgres
+    password: JOJOloj
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 jwt:
   secret: sage-meliodas-GAZ-2026-secret-key-secure-2556bits
   expiration: 3600000

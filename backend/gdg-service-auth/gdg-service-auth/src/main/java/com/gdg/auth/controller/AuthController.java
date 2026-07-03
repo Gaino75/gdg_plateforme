@@ -5,9 +5,16 @@ import com.gdg.auth.model.Utilisateur;
 import com.gdg.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
+
 
 
 @RestController
@@ -39,7 +46,7 @@ public class AuthController {
 public ResponseEntity<?> registerFirstAdmin(
         @Valid @RequestBody RegisterRequest request) {
 
-    boolean hasAdmin = authService.getAllUsers()
+    boolean hasAdmin = authService.getAllUtilisateurs()
         .stream()
         .anyMatch(u -> u.getRole().name().equals("ADMIN"));
 
@@ -125,4 +132,37 @@ public ResponseEntity<?> registerAdmin(
         return ResponseEntity.ok(
             authService.resetPassword(request));
     }
+
+                               //-endpoint pour service admin
+
+    //-lister tous les utilisateur
+    @GetMapping("/admin/users")
+    public ResponseEntity<List<Utilisateur>> getAllUtilisateurs(){
+        return ResponseEntity.ok(authService.getAllUtilisateurs());
+    }
+
+    //--suspendre un utilisateur
+    @PutMapping("/admin/utilisateurs/{id}/suspendre")
+    public ResponseEntity<String> suspendre(@PathVariable long id,
+                                            @RequestBody Map<String,String> body){
+                                                return ResponseEntity.ok(
+                                                    authService.suspendreUtilisateur(id,body.get("motif"))
+                                                );
+                                            }
+                                         
+    //reactiver un utilisateur
+    @PutMapping("/admin/utilisateurs/{id}/reactiver")
+    public  ResponseEntity<String> reactiver(@PathVariable long id){
+      return ResponseEntity.ok(
+                    authService.reactiverUtilisateur(id)); 
+    }
+
+    //supprimer un utilisateur
+    @DeleteMapping("/admin/utilisateurs/{id}")
+    public  ResponseEntity<String> supprimer(
+            @PathVariable Long id){
+                return ResponseEntity.ok(
+                    authService.supprimerUtilisateur(id));
+            }
+    
 }

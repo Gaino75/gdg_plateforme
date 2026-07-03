@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:notif_test;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        default_schema: notifications_schema
+  sql:
+    init:
+      mode: never
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+  mail:
+    host: localhost
+    port: 2525
