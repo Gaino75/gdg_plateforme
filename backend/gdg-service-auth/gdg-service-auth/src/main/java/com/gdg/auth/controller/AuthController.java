@@ -2,6 +2,7 @@ package com.gdg.auth.controller;
 
 import com.gdg.auth.dto.*;
 import com.gdg.auth.model.Utilisateur;
+import com.gdg.auth.security.JwtUtil;
 import com.gdg.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -19,11 +20,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "*")
+
 public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // ── INSCRIPTION CONSOMMATEUR ──────────────────
     @PostMapping("/register/consommateur")
@@ -112,9 +116,9 @@ public ResponseEntity<?> registerAdmin(
     @GetMapping("/profil")
     public ResponseEntity<ProfilResponse> getProfil(
             @RequestHeader("Authorization") String token) {
-        String email = authService.extractEmailFromToken(
+        Long userId = jwtUtil.extractUserId(
             token.replace("Bearer ", ""));
-        return ResponseEntity.ok(authService.getProfil(email));
+        return ResponseEntity.ok(authService.getProfilById(userId));
     }
 
     // ── FORGOT PASSWORD ──────────────────────────

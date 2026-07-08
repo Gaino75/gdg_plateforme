@@ -112,7 +112,7 @@ private RabbitTemplate rabbitTemplate;
 
         // Générer JWT
         String token = jwtUtil.generateToken(
-            utilisateur.getEmail(),
+            utilisateur.getId(),
             utilisateur.getRole().name()
         );
 
@@ -168,7 +168,7 @@ private RabbitTemplate rabbitTemplate;
 
             // Générer JWT
             String token = jwtUtil.generateToken(
-                utilisateur.getEmail(),
+                utilisateur.getId(),
                 utilisateur.getRole().name()
             );
 
@@ -236,10 +236,10 @@ private RabbitTemplate rabbitTemplate;
     }
 
     // ── PROFIL ───────────────────────────────────
-    public ProfilResponse getProfil(String email) {
+    public ProfilResponse getProfilById(Long Id) {
 
         Utilisateur u = utilisateurRepository
-            .findByEmail(email)
+            .findById(Id)
             .orElseThrow(() -> new RuntimeException(
                 "Utilisateur non trouvé"));
 
@@ -316,9 +316,7 @@ rabbitTemplate.convertAndSend(
     }
 
     // ── EXTRAIRE EMAIL DU TOKEN ───────────────────
-    public String extractEmailFromToken(String token) {
-        return jwtUtil.extractEmail(token);
-    }
+   
 
     public List<Utilisateur> getAllUtilisateurs() {
         return utilisateurRepository.findAll();

@@ -22,7 +22,7 @@ public class AdminSignalementService {
     // Lister tous les signalements
     public List<SignalementDTO> getAllSignalements() {
         SignalementDTO[] s = restTemplate.getForObject(
-            NOTIF_URL + "/admin/signalements",
+            NOTIF_URL + "/api/signalements",
             SignalementDTO[].class);
         return s != null ? Arrays.asList(s) : List.of();
     }
@@ -31,7 +31,7 @@ public class AdminSignalementService {
     public void validerSignalement(Long id, Long adminId,
                                     String ip) {
         restTemplate.put(
-            NOTIF_URL + "/signalements/" + id + "/valider",
+            NOTIF_URL + "/api/signalements/" + id + "/traiter?statut=CONFIRME&traitePar=" + adminId,
             null);
         journalAuditService.logAction(
             adminId, "ADMIN", "VALIDER_SIGNALEMENT",
@@ -43,11 +43,12 @@ public class AdminSignalementService {
     public void rejeterSignalement(Long id, Long adminId,
                                     String ip) {
         restTemplate.put(
-            NOTIF_URL + "/signalements/" + id + "/rejeter",
+            NOTIF_URL + "/api/signalements/" + id + "/traiter?statut=REJETE&traitePar=" +adminId,
             null);
         journalAuditService.logAction(
             adminId, "ADMIN", "REJETER_SIGNALEMENT",
             "SIGNALEMENT", id,
             "Rejet signalement ID: " + id, ip);
     }
+    
 }

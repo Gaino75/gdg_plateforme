@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/demandes")
-@CrossOrigin(origins = "*")
+
 public class DemandeInscriptionController {
 
     @Autowired
@@ -33,7 +33,7 @@ public class DemandeInscriptionController {
     @PutMapping("/{id}/approuver")
     public ResponseEntity<DemandeInscriptionAgence> approuver(
             @PathVariable Long id,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         return ResponseEntity.ok(
             demandeService.approuver(
@@ -45,7 +45,7 @@ public class DemandeInscriptionController {
     public ResponseEntity<DemandeInscriptionAgence> rejeter(
             @PathVariable Long id,
             @RequestBody TraiterDemandeRequest body,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         return ResponseEntity.ok(
             demandeService.rejeter(

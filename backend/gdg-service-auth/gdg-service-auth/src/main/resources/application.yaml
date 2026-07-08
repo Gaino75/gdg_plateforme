@@ -1,5 +1,8 @@
 server:
   port: 8081
+  error:
+    include-message: always
+    include-stacktrace: always
 
 spring:
   application:
@@ -24,3 +27,11 @@ spring:
 jwt:
   secret: sage-meliodas-GAZ-2026-secret-key-secure-2556bits
   expiration: 3600000
+
+logging:
+  level:
+    com.gdg.auth: DEBUG
+    org.springframework.web: DEBUG 
+    org.springframework.security: DEBUG
+    root: ERROR
+

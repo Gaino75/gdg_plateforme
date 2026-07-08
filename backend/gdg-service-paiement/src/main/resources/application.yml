@@ -1,0 +1,36 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: gdg-service-paiement
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gdg_auth
+    username: postgres
+    password: JOJOloj
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: paiement_schema
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+services:
+  reservations:
+    url: http://localhost:8085
+
+logging:
+  level:
+    com.gazstation1: DEBUG

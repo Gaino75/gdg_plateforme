@@ -22,6 +22,8 @@ import com.gdg.service_stock.service.StockProduitService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 /**
  * Endpoints REST du Service Stock.
@@ -131,4 +133,10 @@ public class StockProduitController {
             @PathVariable Long agenceId) {
         return ResponseEntity.ok(stockService.getHistorique(agenceId));
     }
+    @GetMapping("/global")
+    public ResponseEntity<List<StockProduitDTO>>getStockGlobal(){
+        return ResponseEntity.ok(stockService.getStockGlobal());
+    }
+    
+    
 }

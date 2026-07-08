@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/statistiques")
-@CrossOrigin(origins = "*")
+
 public class StatistiqueController {
 
     @Autowired

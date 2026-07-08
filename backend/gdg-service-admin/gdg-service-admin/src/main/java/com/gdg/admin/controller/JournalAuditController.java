@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/journal")
-@CrossOrigin(origins = "*")
+
 public class JournalAuditController {
 
     @Autowired

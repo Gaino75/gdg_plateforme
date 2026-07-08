@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/utilisateurs")
-@CrossOrigin(origins = "*")
+
 public class AdminUtilisateurController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class AdminUtilisateurController {
     public ResponseEntity<Void> suspendre(
             @PathVariable Long id,
             @RequestBody ActionRequest body,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         utilisateurService.suspendreUtilisateur(
             id, body.getMotif(), adminId,
@@ -41,7 +41,7 @@ public class AdminUtilisateurController {
     @PutMapping("/{id}/reactiver")
     public ResponseEntity<Void> reactiver(
             @PathVariable Long id,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         utilisateurService.reactiverUtilisateur(
             id, adminId, request.getRemoteAddr());
@@ -52,7 +52,7 @@ public class AdminUtilisateurController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> supprimer(
             @PathVariable Long id,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         utilisateurService.supprimerUtilisateur(
             id, adminId, request.getRemoteAddr());

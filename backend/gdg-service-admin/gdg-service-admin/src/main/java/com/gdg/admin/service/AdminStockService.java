@@ -19,7 +19,7 @@ public class AdminStockService {
     // Voir stock global de toutes les agences
     public List<StockDTO> getStockGlobal() {
         StockDTO[] stocks = restTemplate.getForObject(
-            STOCK_URL + "/admin/stocks/global",
+            STOCK_URL + "/api/stocks/global",
             StockDTO[].class);
         return stocks != null ?
             Arrays.asList(stocks) : List.of();
@@ -28,7 +28,7 @@ public class AdminStockService {
     // Voir stock d'une agence spécifique
     public List<StockDTO> getStockParAgence(Long agenceId) {
         StockDTO[] stocks = restTemplate.getForObject(
-            STOCK_URL + "/stock/agence/" + agenceId,
+            STOCK_URL + "/api/stocks/agence/" + agenceId,
             StockDTO[].class);
         return stocks != null ?
             Arrays.asList(stocks) : List.of();

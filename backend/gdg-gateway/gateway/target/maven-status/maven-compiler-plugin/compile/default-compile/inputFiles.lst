@@ -1,0 +1,6 @@
+C:\Users\dell\OneDrive\Bureau\sageGAZ\gdg_plateforme\backend\gdg-gateway\gateway\src\main\java\com\gdg\gateway\ApiGatewayApplication.java
+C:\Users\dell\OneDrive\Bureau\sageGAZ\gdg_plateforme\backend\gdg-gateway\gateway\src\main\java\com\gdg\gateway\config\CorsConfig.java
+C:\Users\dell\OneDrive\Bureau\sageGAZ\gdg_plateforme\backend\gdg-gateway\gateway\src\main\java\com\gdg\gateway\config\RoutesOuvertesConfig.java
+C:\Users\dell\OneDrive\Bureau\sageGAZ\gdg_plateforme\backend\gdg-gateway\gateway\src\main\java\com\gdg\gateway\filter\JwtAuthFilter.java
+C:\Users\dell\OneDrive\Bureau\sageGAZ\gdg_plateforme\backend\gdg-gateway\gateway\src\main\java\com\gdg\gateway\filter\LoggingFilter.java
+C:\Users\dell\OneDrive\Bureau\sageGAZ\gdg_plateforme\backend\gdg-gateway\gateway\src\main\java\com\gdg\gateway\util\JwtUtil.java

@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/parametres")
-@CrossOrigin(origins = "*")
+
 public class ParametrePlateformeController {
 
     @Autowired
@@ -35,7 +35,7 @@ public class ParametrePlateformeController {
     public ResponseEntity<ParametrePlateforme> modifier(
             @PathVariable String cle,
             @RequestBody Map<String, String> body,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         return ResponseEntity.ok(
             parametreService.modifier(

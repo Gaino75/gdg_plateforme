@@ -25,6 +25,8 @@ public class SignalementService {
     @Value("${app.notifications.delai-signalement-heures:2}")
     private int delaiSignalementHeures;
 
+    
+
     @Transactional
     public Signalement creerSignalement(SignalementRequest request) {
         // Vérifier si l'utilisateur n'a pas déjà signalé récemment
@@ -126,5 +128,9 @@ public class SignalementService {
         return signalementRepository.countByAgenceIdAndStatut(
                 agenceId, Signalement.StatutSignalement.EN_ATTENTE
         );
+    }
+
+    public List<Signalement>getAllSignalements(){
+        return signalementRepository.findAll();
     }
 }

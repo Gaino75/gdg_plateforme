@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/signalements")
-@CrossOrigin(origins = "*")
+
 public class AdminSignalementController {
 
     @Autowired
@@ -27,7 +27,7 @@ public class AdminSignalementController {
     @PutMapping("/{id}/valider")
     public ResponseEntity<Void> valider(
             @PathVariable Long id,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         signalementService.validerSignalement(
             id, adminId, request.getRemoteAddr());
@@ -38,7 +38,7 @@ public class AdminSignalementController {
     @PutMapping("/{id}/rejeter")
     public ResponseEntity<Void> rejeter(
             @PathVariable Long id,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         signalementService.rejeterSignalement(
             id, adminId, request.getRemoteAddr());

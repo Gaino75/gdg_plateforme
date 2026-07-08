@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/agences")
-@CrossOrigin(origins = "*")
+
 public class AdminAgenceController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class AdminAgenceController {
     @PutMapping("/{id}/valider")
     public ResponseEntity<Void> valider(
             @PathVariable Long id,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         agenceService.validerAgence(
             id, adminId, request.getRemoteAddr());
@@ -40,7 +40,7 @@ public class AdminAgenceController {
     public ResponseEntity<Void> rejeter(
             @PathVariable Long id,
             @RequestBody ActionRequest body,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         agenceService.rejeterAgence(
             id, body.getMotif(), adminId,
@@ -53,7 +53,7 @@ public class AdminAgenceController {
     public ResponseEntity<Void> suspendre(
             @PathVariable Long id,
             @RequestBody ActionRequest body,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         agenceService.suspendreAgence(
             id, body.getMotif(), adminId,
@@ -65,7 +65,7 @@ public class AdminAgenceController {
     @PutMapping("/{id}/reactiver")
     public ResponseEntity<Void> reactiver(
             @PathVariable Long id,
-            @RequestHeader("X-Admin-Id") Long adminId,
+            @RequestHeader("X-User-Id") Long adminId,
             HttpServletRequest request) {
         agenceService.reactiverAgence(
             id, adminId, request.getRemoteAddr());
