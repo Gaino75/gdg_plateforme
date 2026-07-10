@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/stocks")
-@CrossOrigin(origins = "*")
+
 public class AdminStockController {
 
     @Autowired

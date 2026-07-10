@@ -4,12 +4,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableMethodSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
     @Bean
@@ -22,20 +24,13 @@ public class SecurityConfig {
             throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .sessionManagement(session->
+                session.sessionCreationPolicy(
+                    SessionCreationPolicy.STATELESS
+                )
+            )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/auth/register/**",
-                    "/auth/logout",
-                    "/auth/login",
-                    "/auth/forgot-password",
-                    "/auth/reset-password",
-                    "/auth/profil",
-                    "/auth/validate",
-                    "/auth/verify-email",
-                    "/auth/internal/**",
-                    "/auth/admin/**"
-                ).permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             );
         return http.build();
     }

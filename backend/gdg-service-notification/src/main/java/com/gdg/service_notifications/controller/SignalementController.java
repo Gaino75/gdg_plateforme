@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Slf4j
 @RestController
@@ -125,4 +128,10 @@ public class SignalementController {
         long count = signalementService.countPendingSignalementsByAgence(agenceId);
         return ResponseEntity.ok(count);
     }
+
+    @GetMapping
+    public ResponseEntity<List<Signalement>>getAllSignalements(){
+        return ResponseEntity.ok(signalementService.getAllSignalements());
+    }
+    
 }

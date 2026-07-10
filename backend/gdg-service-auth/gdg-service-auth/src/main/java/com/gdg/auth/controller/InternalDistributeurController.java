@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth/internal/distributeurs")
-@CrossOrigin(origins = "*")
+
 public class InternalDistributeurController {
 
     @Autowired

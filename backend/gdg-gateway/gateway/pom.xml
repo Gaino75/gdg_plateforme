@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        ============================================================
+        PARENT : Spring Boot 3.3.2 comme imposé par l'enseignant
+        ============================================================
+    -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.2</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.gdg</groupId>
+    <artifactId>api-gateway</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>api-gateway</name>
+    <description>API Gateway centrale du projet GPG — point d'entrée unique de tous les microservices</description>
+
+    <properties>
+        <java.version>17</java.version>
+        <!--
+            Spring Cloud version compatible avec Spring Boot 3.3.2
+            Spring Cloud Gateway fait partie de l'écosystème Spring Cloud
+        -->
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+
+        <!--
+            ============================================================
+            SPRING CLOUD GATEWAY
+            ============================================================
+            C'est le coeur de ce service. Cette dépendance fournit :
+            - Le moteur de routage (rediriger les requêtes vers les bons microservices)
+            - Le système de filtres (intercepter les requêtes avant/après routage)
+            - La gestion asynchrone (basé sur WebFlux, pas Servlet)
+
+            IMPORTANT : Spring Cloud Gateway est basé sur WebFlux (réactif),
+            PAS sur Spring MVC (servlet classique).
+            Cela signifie qu'on utilise Mono/Flux au lieu de réponses classiques.
+            Ne jamais ajouter spring-boot-starter-web ici, ça crée un conflit !
+        -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+
+        <!--
+            ============================================================
+            JJWT — Bibliothèque pour lire et valider les tokens JWT
+            ============================================================
+            JWT = JSON Web Token. C'est le token que le Service Auth génère
+            lors de la connexion. La Gateway doit pouvoir :
+            1. Lire ce token depuis l'en-tête HTTP "Authorization"
+            2. Vérifier sa signature (qu'il n'a pas été falsifié)
+            3. Extraire les informations (userId, role, expiration)
+
+            On a besoin de 3 modules JJWT :
+            - jjwt-api     : les interfaces (JwtParser, Claims, etc.)
+            - jjwt-impl    : l'implémentation concrète
+            - jjwt-jackson : pour lire le JSON à l'intérieur du token
+        -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
+            ============================================================
+            LOMBOK — Pour éviter les getters/setters répétitifs
+            ============================================================
+        -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--
+            Tests unitaires
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!--
+        Gestionnaire de versions Spring Cloud.
+        Il assure que toutes les dépendances Spring Cloud (Gateway, Config, etc.)
+        sont sur des versions compatibles entre elles.
+    -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

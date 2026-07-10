@@ -77,6 +77,77 @@ public class NotificationListener {
         notificationService.createAndSendNotification(request);
     }
 
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_STOCK_CRITIQUE)
+    public void onStockCritique(Map<String, Object> event) {
+        NotificationRequest request = NotificationRequest.builder()
+            .utilisateurId(longValue(event.get("distributeurId")))
+            .titre("Alerte stock critique")
+            .message("Stock critique agence " + stringValue(event.get("agenceId"))
+                + " — " + stringValue(event.get("categorieLibelle"))
+                + " : " + stringValue(event.get("quantiteDisponible")) + " unités restantes")
+            .typeNotification(Notification.TypeNotification.SEUIL_CRITIQUE)
+            .referenceId(longValue(event.get("agenceId")))
+            .referenceType("STOCK")
+            .build();
+        notificationService.createAndSendNotification(request);
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_STOCK_DISPONIBLE)
+    public void onStockDisponible(Map<String, Object> event) {
+        NotificationRequest request = NotificationRequest.builder()
+            .utilisateurId(longValue(event.get("distributeurId")))
+            .titre("Produit disponible")
+            .message("Le produit " + stringValue(event.get("categorieLibelle"))
+                + " est de nouveau disponible à l'agence " + stringValue(event.get("agenceId")))
+            .typeNotification(Notification.TypeNotification.STOCK_DISPONIBLE)
+            .referenceId(longValue(event.get("agenceId")))
+            .referenceType("STOCK")
+            .build();
+        notificationService.createAndSendNotification(request);
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_RESERVATION_CONFIRMEE)
+    public void onReservationConfirmee(Map<String, Object> event) {
+        NotificationRequest request = NotificationRequest.builder()
+            .utilisateurId(longValue(event.get("consommateurId")))
+            .titre("Nouvelle réservation payée")
+            .message("Réservation " + stringValue(event.get("referenceReservation"))
+                + " confirmée — montant " + stringValue(event.get("montantTotal")) + " XAF")
+            .typeNotification(Notification.TypeNotification.RESERVATION_CONFIRMEE)
+            .referenceId(longValue(event.get("reservationId")))
+            .referenceType("RESERVATION")
+            .build();
+        notificationService.createAndSendNotification(request);
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_PAIEMENT_CONFIRME)
+    public void onPaiementConfirme(Map<String, Object> event) {
+        NotificationRequest request = NotificationRequest.builder()
+            .utilisateurId(longValue(event.get("consommateurId")))
+            .titre("Paiement confirmé")
+            .message("Votre paiement " + stringValue(event.get("referenceTransaction"))
+                + " a été confirmé avec succès.")
+            .typeNotification(Notification.TypeNotification.PAIEMENT_CONFIRME)
+            .referenceId(longValue(event.get("paiementId")))
+            .referenceType("PAIEMENT")
+            .build();
+        notificationService.createAndSendNotification(request);
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_PAIEMENT_ECHOUE)
+    public void onPaiementEchoue(Map<String, Object> event) {
+        NotificationRequest request = NotificationRequest.builder()
+            .utilisateurId(longValue(event.get("consommateurId")))
+            .titre("Paiement échoué")
+            .message("Le paiement de la réservation " + stringValue(event.get("reservationId"))
+                + " a échoué : " + stringValue(event.get("message")))
+            .typeNotification(Notification.TypeNotification.PAIEMENT_ECHOUE)
+            .referenceId(longValue(event.get("reservationId")))
+            .referenceType("RESERVATION")
+            .build();
+        notificationService.createAndSendNotification(request);
+    }
+
     private Long longValue(Object value) {
         if (value == null) {
             return 1L;

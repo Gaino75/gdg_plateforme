@@ -20,6 +20,17 @@ public class RabbitMQConfig {
     public static final String KEY_PASSWORD_RESET = "password.reset";
     public static final String KEY_USER_SUSPENDED = "user.suspended";
     public static final String KEY_AGENCE_VALIDEE = "agence.validee";
+    public static final String KEY_STOCK_CRITIQUE = "stock.critique";
+    public static final String KEY_STOCK_DISPONIBLE = "stock.disponible";
+    public static final String KEY_RESERVATION_CONFIRMEE = "reservation.confirmee";
+    public static final String KEY_PAIEMENT_CONFIRME = "paiement.confirme";
+    public static final String KEY_PAIEMENT_ECHOUE = "paiement.echoue";
+
+    public static final String QUEUE_STOCK_CRITIQUE = "queue.stock.critique";
+    public static final String QUEUE_STOCK_DISPONIBLE = "queue.stock.disponible";
+    public static final String QUEUE_RESERVATION_CONFIRMEE = "queue.reservation.confirmee";
+    public static final String QUEUE_PAIEMENT_CONFIRME = "queue.paiement.confirme";
+    public static final String QUEUE_PAIEMENT_ECHOUE = "queue.paiement.echoue";
 
     @Bean
     public TopicExchange exchange() {
@@ -47,6 +58,31 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue queueStockCritique() {
+        return new Queue(QUEUE_STOCK_CRITIQUE, true);
+    }
+
+    @Bean
+    public Queue queueStockDisponible() {
+        return new Queue(QUEUE_STOCK_DISPONIBLE, true);
+    }
+
+    @Bean
+    public Queue queueReservationConfirmee() {
+        return new Queue(QUEUE_RESERVATION_CONFIRMEE, true);
+    }
+
+    @Bean
+    public Queue queuePaiementConfirme() {
+        return new Queue(QUEUE_PAIEMENT_CONFIRME, true);
+    }
+
+    @Bean
+    public Queue queuePaiementEchoue() {
+        return new Queue(QUEUE_PAIEMENT_ECHOUE, true);
+    }
+
+    @Bean
     public Binding bindingUserRegistered() {
         return BindingBuilder.bind(queueUserRegistered())
             .to(exchange()).with(KEY_USER_REGISTERED);
@@ -68,6 +104,36 @@ public class RabbitMQConfig {
     public Binding bindingAgenceValidee() {
         return BindingBuilder.bind(queueAgenceValidee())
             .to(exchange()).with(KEY_AGENCE_VALIDEE);
+    }
+
+    @Bean
+    public Binding bindingStockCritique() {
+        return BindingBuilder.bind(queueStockCritique())
+            .to(exchange()).with(KEY_STOCK_CRITIQUE);
+    }
+
+    @Bean
+    public Binding bindingStockDisponible() {
+        return BindingBuilder.bind(queueStockDisponible())
+            .to(exchange()).with(KEY_STOCK_DISPONIBLE);
+    }
+
+    @Bean
+    public Binding bindingReservationConfirmee() {
+        return BindingBuilder.bind(queueReservationConfirmee())
+            .to(exchange()).with(KEY_RESERVATION_CONFIRMEE);
+    }
+
+    @Bean
+    public Binding bindingPaiementConfirme() {
+        return BindingBuilder.bind(queuePaiementConfirme())
+            .to(exchange()).with(KEY_PAIEMENT_CONFIRME);
+    }
+
+    @Bean
+    public Binding bindingPaiementEchoue() {
+        return BindingBuilder.bind(queuePaiementEchoue())
+            .to(exchange()).with(KEY_PAIEMENT_ECHOUE);
     }
 
     @Bean

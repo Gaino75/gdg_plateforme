@@ -22,9 +22,9 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String email, String role) {
+    public String generateToken(Long id, String role) {
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(String.valueOf(id))
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(
@@ -33,8 +33,8 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String extractEmail(String token) {
-        return getClaims(token).getSubject();
+    public Long extractUserId(String token) {
+        return  Long.parseLong(getClaims(token).getSubject());
     }
 
     public String extractRole(String token) {

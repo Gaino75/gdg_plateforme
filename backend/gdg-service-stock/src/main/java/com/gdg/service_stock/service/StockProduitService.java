@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gdg.service_stock.config.RabbitMQConfig;
 import com.gdg.service_stock.dtos.DtoMouvement.MouvementResultDTO;
+import com.gdg.service_stock.dtos.DistributeurInfoDTO;
 import com.gdg.service_stock.dtos.DtoMouvement.MouvementStockDTO;
 import com.gdg.service_stock.dtos.DtoStock.ApprovisionnerStockDTO;
 import com.gdg.service_stock.dtos.DtoStock.DecrementStockDTO;
@@ -24,6 +26,11 @@ import com.gdg.service_stock.repository.StockProduitRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Couche métier du service stock.
@@ -39,7 +46,16 @@ public class StockProduitService {
     private final StockProduitRepository stockRepo;
     private final MouvementStockRepository mouvementRepo;
     private final CategorieProduitRepository categorieRepo;
+    private final RabbitTemplate rabbitTemplate;
+    
+    private final AuthServiceClient authServiceClient;
 
+    public List<StockProduitDTO>getStockGlobal(){
+        return stockRepo.findAll()
+               .stream()
+               .map(this::toDTO)
+               .toList();
+    }
     // ─── Lecture ──────────────────────────────────────────────────────────
 
     /** Tout le stock détaillé d'une agence (pour consommateur connecté) */
@@ -118,6 +134,7 @@ public class StockProduitService {
                      stock.getAgenceId(),
                      stock.getCategorieProduit().getLibelle(),
                      stock.getQuantiteDisponible());
+            publierAlerteCritique(stock);
         }
 
         stockRepo.save(stock);
@@ -179,6 +196,10 @@ public class StockProduitService {
         log.info("[APPRO] agence={} categorie={} +{} unités (avant={} après={})",
                  stock.getAgenceId(), stock.getCategorieProduit().getLibelle(),
                  dto.getQuantite(), avant, stock.getQuantiteDisponible());
+
+        if (avant == 0 && stock.getQuantiteDisponible() > 0) {
+            publierStockDisponible(stock);
+        }
 
         return MouvementResultDTO.builder()
                 .mouvementId(saved.getId())
@@ -268,5 +289,42 @@ public class StockProduitService {
                 .effectuePar(m.getEffectuePar())
                 .dateMouvement(m.getDateMouvement())
                 .build();
+    }
+
+    private void publierAlerteCritique(StockProduit stock) {
+        try {
+            DistributeurInfoDTO distributeur=authServiceClient.getDistributeurByAgence(stock.getAgenceId());
+
+            Map<String, Object> event = new HashMap<>();
+            event.put("agenceId", stock.getAgenceId());
+            event.put("categorieProduitId", stock.getCategorieProduit().getId());
+            event.put("categorieLibelle", stock.getCategorieProduit().getLibelle());
+            event.put("quantiteDisponible", stock.getQuantiteDisponible());
+            event.put("seuilCritique", stock.getSeuilCritique());
+            event.put("distributeurId",distributeur != null? distributeur.getId():null);
+            event.put("emailDistributeur",distributeur != null ? distributeur.getEmail():null);
+            rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE,
+                    RabbitMQConfig.KEY_STOCK_CRITIQUE, event);
+        } catch (Exception e) {
+            log.warn("RabbitMQ indisponible — alerte critique non publiée: {}", e.getMessage());
+        }
+    }
+
+    private void publierStockDisponible(StockProduit stock) {
+        try {
+            DistributeurInfoDTO distributeur= authServiceClient.getDistributeurByAgence(stock.getAgenceId());
+
+            Map<String, Object> event = new HashMap<>();
+            event.put("agenceId", stock.getAgenceId());
+            event.put("categorieProduitId", stock.getCategorieProduit().getId());
+            event.put("categorieLibelle", stock.getCategorieProduit().getLibelle());
+            event.put("quantiteDisponible", stock.getQuantiteDisponible());
+            event.put("distributeurId",distributeur !=null ? distributeur.getId() :null);
+            event.put("emailDistributeur",distributeur !=null ? distributeur.getEmail() :null);
+            rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE,
+                    RabbitMQConfig.KEY_STOCK_DISPONIBLE, event);
+        } catch (Exception e) {
+            log.warn("RabbitMQ indisponible — notification stock non publiée: {}", e.getMessage());
+        }
     }
 }

@@ -38,7 +38,8 @@ public class ReservationController {
         request.getConsommateurId(),
         request.getCategorieProduitId(),
         request.getQuantite(),
-        request.getModePaiement()
+        request.getModePaiement(),
+        request.getNumeroTelephone()
     );
     return ResponseEntity.status(HttpStatus.CREATED).body(mapToResponse(reservation));
     }
