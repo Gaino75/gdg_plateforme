@@ -1,13 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { User, Phone, Mail, Lock, LogOut } from 'lucide-react';
-import axiosInstance from '../../../services/axiosInstance';
-import { useAuth } from '../../../context/AuthContext';
-import TopNav from '../../layout/TopNav';
+import axiosInstance from '../../services/axiosInstance';
+import { useAuth } from '../../context/AuthContext';
+import TopNav from '../../components/layout/TopNav';
 
 const ROLE_LABELS = { CONSOMMATEUR: 'Consommateur', DISTRIBUTEUR: 'Distributeur', ADMIN: 'Admin' };
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ nom: user?.nom || '', prenom: user?.prenom || '', telephone: user?.telephone || '', email: user?.email || '' });
   const [pwd, setPwd] = useState({ ancien: '', nouveau: '' });
   const [message, setMessage] = useState('');
@@ -109,7 +111,7 @@ export default function ProfilePage() {
             <p className="font-semibold text-red-900 text-sm">Déconnexion</p>
             <p className="text-red-700 text-xs">Vous serez redirigé vers la page de connexion.</p>
           </div>
-          <button onClick={logout} className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg flex items-center gap-1.5">
+          <button onClick={()=>{logout();navigate('/connexion')}} className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg flex items-center gap-1.5">
             <LogOut size={15} /> Se déconnecter
           </button>
         </div>

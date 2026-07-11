@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
-import ForgotPasswordPage from '.pages/auth/ForgotPasswordPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import ProfilePage from './pages/common/ProfilePage';
 import NotificationsPage from './pages/common/NotificationsPage';
 
@@ -16,6 +16,7 @@ export default function App() {
           <Route path="/mot-de-passe-oublie" element={<ForgotPasswordPage />} />
           <Route path="/profil" element={<ProfilePage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/*" element={<h1>page not found</h1>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

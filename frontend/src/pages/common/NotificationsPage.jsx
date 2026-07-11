@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { CheckCheck, Package, Calendar, CreditCard, Fuel } from 'lucide-react';
-import axiosInstance from '../../../services/axiosInstance';
-import { useAuth } from '../../../context/AuthContext';
-import TopNav from '../../layout/TopNav';
+import axiosInstance from '../../services/axiosInstance';
+import { useAuth } from '../../context/AuthContext';
+import TopNav from '../../components/layout/TopNav';
 
 const ICONS = { SEUIL_CRITIQUE: Package, RESERVATION_CONFIRMEE: Calendar, PAIEMENT_CONFIRME: CreditCard, STOCK_DISPONIBLE: Fuel };
 const TABS = [
