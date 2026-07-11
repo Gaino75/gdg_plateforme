@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { KeyRound, ArrowLeft, Fuel } from 'lucide-react';
-import axiosInstance from '../../../services/axiosInstance';
+import axiosInstance from '../../services/axiosInstance';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');

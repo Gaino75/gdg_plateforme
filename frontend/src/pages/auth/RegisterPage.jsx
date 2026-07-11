@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Phone, Store, MapPin, Lock, ArrowRight, Fuel } from 'lucide-react';
-import axiosInstance from '../../../services/axiosInstance';
+import axiosInstance from '../../services/axiosInstance';
 
 export default function RegisterPage() {
   const [role, setRole] = useState('CONSOMMATEUR'); // ou 'DISTRIBUTEUR'
