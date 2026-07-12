@@ -1,0 +1,1 @@
+// Jauge circulaire de stock

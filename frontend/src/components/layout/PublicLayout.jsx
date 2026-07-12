@@ -1,0 +1,1 @@
+// Layout public (sans sidebar)

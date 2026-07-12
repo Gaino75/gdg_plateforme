@@ -1,0 +1,1 @@
+// Supervision stock global

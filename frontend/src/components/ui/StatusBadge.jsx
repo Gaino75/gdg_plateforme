@@ -1,0 +1,1 @@
+// Badge de statut personnalise

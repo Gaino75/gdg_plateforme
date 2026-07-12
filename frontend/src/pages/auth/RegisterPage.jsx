@@ -1,3 +1,5 @@
+// inscription (choix role)
+
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Phone, Store, MapPin, Lock, ArrowRight, Fuel } from 'lucide-react';

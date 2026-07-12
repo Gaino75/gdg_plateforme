@@ -1,0 +1,1 @@
+// Badge statut (Disponible/Limite/RUpture)
