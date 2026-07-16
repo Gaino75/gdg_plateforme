@@ -23,3 +23,9 @@ export const ROLE_ROUTES = {
   [ROLES.DISTRIBUTEUR]: '/distributeur',
   [ROLES.ADMIN]: '/admin',
 };
+
+export const ROLE_ICONS = {
+  [ROLES.CONSOMMATEUR]: '👤',
+  [ROLES.DISTRIBUTEUR]: '🏪',
+  [ROLES.ADMIN]: '⚙️',
+};

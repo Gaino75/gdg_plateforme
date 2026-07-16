@@ -38,10 +38,10 @@ export default function LoginPage() {
       <div className="hidden lg:flex flex-col justify-between w-2/5 bg-slate-900 text-white p-10">
         <div className="flex items-center gap-2">
           <div className="bg-teal-700 rounded-lg p-2"><Fuel size={20} /></div>
-          <span className="font-bold text-lg">GPG</span>
+          <span className="font-bold text-lg">GDG</span>
         </div>
         <div>
-          <p className="text-xs tracking-widest text-slate-400 mb-2">PLATEFORME GPG</p>
+          <p className="text-xs tracking-widest text-slate-400 mb-2">PLATEFORME GDG</p>
           <h1 className="text-3xl font-bold leading-tight mb-8">
             Le gaz disponible, en temps réel, partout au Cameroun.
           </h1>
@@ -55,7 +55,7 @@ export default function LoginPage() {
       <div className="flex-1 flex items-center justify-center bg-slate-50 p-8">
         <form onSubmit={handleSubmit} className="w-full max-w-sm">
           <h2 className="text-2xl font-bold text-slate-900">Connexion</h2>
-          <p className="text-slate-500 text-sm mb-6">Accédez à votre espace GPG.</p>
+          <p className="text-slate-500 text-sm mb-6">Accédez à votre espace GDG.</p>
 
           {error && (
             <div className="bg-red-50 text-red-700 text-sm rounded-lg px-4 py-2 mb-4">{error}</div>

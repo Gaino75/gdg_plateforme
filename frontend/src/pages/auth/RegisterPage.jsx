@@ -63,7 +63,7 @@ export default function RegisterPage() {
       <div className="hidden lg:flex flex-col justify-between w-2/5 bg-slate-900 text-white p-10">
         <div className="flex items-center gap-2">
           <div className="bg-teal-700 rounded-lg p-2"><Fuel size={20} /></div>
-          <span className="font-bold text-lg">GPG</span>
+          <span className="font-bold text-lg">GDG</span>
         </div>
         <div>
           <p className="text-xs tracking-widest text-slate-400 mb-2">NOUVEAU COMPTE</p>

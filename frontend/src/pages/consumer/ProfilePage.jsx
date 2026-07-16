@@ -1,4 +1,6 @@
 // Mon profil
+
+/*
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Phone, Mail, Lock, LogOut } from 'lucide-react';
@@ -120,3 +122,134 @@ export default function ProfilePage() {
     </div>
   );
 }
+*/
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { User, Phone, Mail, Lock, LogOut } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import Card from '../../components/ui/Card';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
+import Alert from '../../components/ui/Alert';
+import { ROLES, ROLE_LABELS } from '../../constants/roles';
+
+const ProfilePage = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [form, setForm] = useState({
+    nom: user?.nom || '',
+    prenom: user?.prenom || '',
+    telephone: user?.telephone || '',
+    email: user?.email || '',
+  });
+  const [passwordForm, setPasswordForm] = useState({ ancien: '', nouveau: '' });
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  const initiales = `${user?.prenom?.[0] || ''}${user?.nom?.[0] || ''}`.toUpperCase();
+
+  const handleProfileSubmit = (e) => {
+    e.preventDefault();
+    setMessage('Modifications enregistrées.');
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    setMessage('Mot de passe mis à jour.');
+    setPasswordForm({ ancien: '', nouveau: '' });
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/connexion');
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-6">
+      <h1 className="text-2xl font-bold text-gray-900">Mon profil</h1>
+      <p className="text-gray-500">Gérez vos informations personnelles et votre sécurité.</p>
+
+      {message && <Alert type="success" message={message} />}
+      {error && <Alert type="error" message={error} />}
+
+      {/* Profil */}
+      <Card>
+        <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
+          <div className="w-16 h-16 rounded-full bg-[#1E3A5F] text-white flex items-center justify-center text-xl font-bold">
+            {initiales}
+          </div>
+          <div>
+            <p className="text-lg font-semibold text-gray-900">{user?.prenom} {user?.nom}</p>
+            <span className="inline-block text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+              {ROLE_LABELS[user?.role] || user?.role}
+            </span>
+          </div>
+        </div>
+
+        <form onSubmit={handleProfileSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input
+            label="Nom"
+            value={form.nom}
+            onChange={(e) => setForm({ ...form, nom: e.target.value })}
+          />
+          <Input
+            label="Prénom"
+            value={form.prenom}
+            onChange={(e) => setForm({ ...form, prenom: e.target.value })}
+          />
+          <Input
+            label="Téléphone"
+            value={form.telephone}
+            onChange={(e) => setForm({ ...form, telephone: e.target.value })}
+          />
+          <Input
+            label="Email"
+            value={form.email}
+            disabled
+          />
+          <div className="md:col-span-2">
+            <Button type="submit" variant="primary">Enregistrer les modifications</Button>
+          </div>
+        </form>
+      </Card>
+
+      {/* Sécurité */}
+      <Card>
+        <h2 className="font-semibold text-gray-900 mb-4">Sécurité</h2>
+        <form onSubmit={handlePasswordSubmit} className="space-y-4">
+          <Input
+            label="Mot de passe actuel"
+            type="password"
+            value={passwordForm.ancien}
+            onChange={(e) => setPasswordForm({ ...passwordForm, ancien: e.target.value })}
+            placeholder="••••••••"
+          />
+          <Input
+            label="Nouveau mot de passe"
+            type="password"
+            value={passwordForm.nouveau}
+            onChange={(e) => setPasswordForm({ ...passwordForm, nouveau: e.target.value })}
+            placeholder="8 caractères minimum"
+          />
+          <Button type="submit" variant="primary">Mettre à jour le mot de passe</Button>
+        </form>
+      </Card>
+
+      {/* Déconnexion */}
+      <div className="bg-red-50 border border-red-100 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <p className="font-semibold text-red-900">Déconnexion</p>
+          <p className="text-red-700 text-sm">Vous serez redirigé vers la page de connexion.</p>
+        </div>
+        <Button variant="danger" onClick={handleLogout} className="gap-2">
+          <LogOut size={16} /> Se déconnecter
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default ProfilePage;

@@ -1,1 +1,0 @@
-// Parametres (logo, seuil, horaires)

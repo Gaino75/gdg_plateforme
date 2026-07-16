@@ -1,1 +1,0 @@
-// Etoiles d'evaluation pour les avis des utilisateurs

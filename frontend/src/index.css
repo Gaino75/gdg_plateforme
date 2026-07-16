@@ -1,2 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-dark: #1E3A5F;
+    --primary-orange: #FF6B35;
+    --white: #FFFFFF;
+    --gray-light: #F5F7FA;
+    --success: #2ECC71;
+    --danger: #E74C3C;
+    --warning: #F39C12;
+    --text-dark: #2D3748;
+    --text-gray: #718096;
+    --border: #E2E8F0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #F5F7FA;
+    color: #2D3748;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/*
+
 /* Import Tailwind + styles de base */
-@import "tailwindcss";
+/*
+@import "tailwindcss/preflight";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* @tailwind base; replaced by preflight import for Tailwind v4+ */
+/*
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-dark: #1E3A5F;
+    --primary-orange: #FF6B35;
+    --white: #FFFFFF;
+    --gray-light: #F5F7FA;
+    --success: #2ECC71;
+    --danger: #E74C3C;
+    --warning: #F39C12;
+    --text-dark: #2D3748;
+    --text-gray: #718096;
+    --border: #E2E8F0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #F5F7FA;
+    color: #2D3748;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply bg-[#1E3A5F] text-white hover:bg-[#18304F] transition-colors duration-200;
+  }
+
+  .btn-orange {
+    @apply bg-[#FF6B35] text-white hover:bg-[#E55A2A] transition-colors duration-200;
+  }
+
+  .badge-available {
+    @apply bg-[#2ECC71] text-white px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-limited {
+    @apply bg-[#F39C12] text-white px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-out {
+    @apply bg-[#E74C3C] text-white px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-pending {
+    @apply bg-[#FF6B35] text-white px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+ */

@@ -1,1 +1,0 @@
-// Carte notification (page Notifications)
