@@ -9,7 +9,7 @@ export const stockService = {
 
   // Stock
   getStockAgence: (agenceId) => axiosInstance.get(API.STOCK.AGENCE(agenceId)),
-  getStockPublic: (agenceId) => axiosInstance.get(API.STOCK.PUBLIC(agenceId)),
+  getStockPublic: (agenceId) => axiosInstance.get(API.STOCK.PUBLIC_DISPONIBILITE(agenceId)),
   getStockCritiques: (agenceId) => axiosInstance.get(API.STOCK.CRITIQUES(agenceId)),
   getHistorique: (agenceId) => axiosInstance.get(API.STOCK.HISTORIQUE(agenceId)),
   getStockGlobal: () => axiosInstance.get(API.STOCK.GLOBAL),

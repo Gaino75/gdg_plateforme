@@ -17,24 +17,39 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
+
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
     try {
-      const [enseignesRes] = await Promise.all([
-        axiosInstance.get(API.AGENCES.ENSEIGNES),
-      ]);
+
+        //appel des vrai endpoint pour ne pas simuler les stats
+  const [enseignesRes, statsAgences, statsVilles] = await Promise.all([
+    axiosInstance.get(API.AGENCES.ENSEIGNES),
+    axiosInstance.get(API.AGENCES.STATISTIQUES),
+    axiosInstance.get(API.AGENCES.VILLES),
+  ]);
       setEnseignes(enseignesRes.data);
       
       // Stats simulées (à remplacer par un vrai endpoint)
-      setStats({
+      /*setStats({
         nbEnseignes: enseignesRes.data.length,
         nbAgences: 28,
         nbDisponibles: 18,
         nbVilles: 27,
-      });
+      });*/
+      
+      // stats reel
+      setStats({
+        nbEnseignes: enseignesRes.data.length,
+        nbAgences: statsAgences.data.totalAgences,
+        nbVilles: statsVilles.data.length,
+
+      }
+      );
+      
     } catch (error) {
       console.error('Erreur de chargement', error);
     } finally {

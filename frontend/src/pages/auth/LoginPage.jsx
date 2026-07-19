@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Fuel } from 'lucide-react';
 import axiosInstance from '../../services/axiosInstance';
 import { useAuth } from '../../context/AuthContext';
+import {API} from '../../constants/api';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -20,11 +21,11 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      const { data } = await axiosInstance.post('/auth/login', { email, motDePasse });
+      const { data } = await axiosInstance.post(API.AUTH.LOGIN, { email, motDePasse });
       login(data.token, data);
       if (data.role === 'ADMIN') navigate('/admin');
-      else if (data.role === 'DISTRIBUTEUR') navigate('/profil');
-      else navigate('/profil');
+      else if (data.role === 'DISTRIBUTEUR') navigate('/distributeur');
+      else navigate('/consommateur');
     } catch (err) {
       setError(err.response?.data?.message || 'Email ou mot de passe incorrect.');
     } finally {

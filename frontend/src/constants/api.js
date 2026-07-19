@@ -6,18 +6,18 @@ const GATEWAY_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 export const API = {
   // Auth
   AUTH: {
-    LOGIN: `${GATEWAY_URL}/api/auth/login`,
-    REGISTER_CONSUMER: `${GATEWAY_URL}/api/auth/register/consommateur`,
-    REGISTER_DISTRIBUTOR: `${GATEWAY_URL}/api/auth/register/distributeur`,
-    REGISTER_ADMIN: `${GATEWAY_URL}/api/auth/register/admin`,
-    LOGOUT: `${GATEWAY_URL}/api/auth/logout`,
-    PROFIL: `${GATEWAY_URL}/api/auth/profil`,
-    FORGOT_PASSWORD: `${GATEWAY_URL}/api/auth/forgot-password`,
-    RESET_PASSWORD: `${GATEWAY_URL}/api/auth/reset-password`,
-    ADMIN_USERS: `${GATEWAY_URL}/api/auth/admin/users`,
-    SUSPENDRE_USER: (id) => `${GATEWAY_URL}/api/auth/admin/utilisateurs/${id}/suspendre`,
-    REACTIVER_USER: (id) => `${GATEWAY_URL}/api/auth/admin/utilisateurs/${id}/reactiver`,
-    DELETE_USER: (id) => `${GATEWAY_URL}/api/auth/admin/utilisateurs/${id}`,
+    LOGIN: `${GATEWAY_URL}/auth/login`,
+    REGISTER_CONSUMER: `${GATEWAY_URL}/auth/register/consommateur`,
+    REGISTER_DISTRIBUTOR: `${GATEWAY_URL}/auth/register/distributeur`,
+    REGISTER_ADMIN: `${GATEWAY_URL}/auth/register/admin`,
+    LOGOUT: `${GATEWAY_URL}/auth/logout`,
+    PROFIL: `${GATEWAY_URL}/auth/profil`,
+    FORGOT_PASSWORD: `${GATEWAY_URL}/auth/forgot-password`,
+    RESET_PASSWORD: `${GATEWAY_URL}/auth/reset-password`,
+    ADMIN_USERS: `${GATEWAY_URL}/auth/admin/users`,
+    SUSPENDRE_USER: (id) => `${GATEWAY_URL}/auth/admin/utilisateurs/${id}/suspendre`,
+    REACTIVER_USER: (id) => `${GATEWAY_URL}/auth/admin/utilisateurs/${id}/reactiver`,
+    DELETE_USER: (id) => `${GATEWAY_URL}/auth/admin/utilisateurs/${id}`,
   },
   
   // Agences
