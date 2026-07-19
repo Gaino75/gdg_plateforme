@@ -21,7 +21,9 @@ import java.util.Map;
 public class UploadController {
 
     private final FileStorageService fileStorageService;
+   
     private final EnseigneService enseigneService;
+
     private final AgenceService agenceService;
 
     // Upload du logo d'une enseigne

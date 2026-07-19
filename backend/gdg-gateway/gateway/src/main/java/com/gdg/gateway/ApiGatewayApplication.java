@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *       ↓
  *   PostgreSQL / Supabase
  *
- * @author Équipe GPG
+ * @author Équipe GDG
  * @version 1.0 — 2025-2026
  * ================================================================
  */
@@ -35,7 +35,7 @@ public class ApiGatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(ApiGatewayApplication.class, args);
         System.out.println("==============================================");
-        System.out.println("   API GATEWAY GPG démarrée sur le port 8080");
+        System.out.println("   API GATEWAY GDG démarrée sur le port 8080");
         System.out.println("   Tous les microservices sont accessibles via");
         System.out.println("   http://localhost:8080");
         System.out.println("==============================================");

@@ -53,7 +53,7 @@ public class StockServiceClient {
                        .uri(stockServiceUrl + "/api/stocks/approvisionner")
                        .body(Mono.just(body),Map.class)
                        .retrieve()
-                       .bodyToMono(void.class)
+                       .bodyToMono(Void.class)
                        .block();
              
         log.info("Approvisionnement effectuer avec succes");               

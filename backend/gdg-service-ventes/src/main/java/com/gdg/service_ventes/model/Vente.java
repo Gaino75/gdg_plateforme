@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -55,7 +56,8 @@ public class Vente {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatutVente statut;
+    @Builder.Default
+    private StatutVente statut = StatutVente.CONFIRMEE;
 
     @Column(name = "reference_paiement")
     private String referencePaiement;

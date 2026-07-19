@@ -363,7 +363,8 @@ rabbitTemplate.convertAndSend(
     public String supprimerUtilisateur(Long id) {
          Utilisateur utilisateur=utilisateurRepository.findById(id)
                                                       .orElseThrow(()->new RuntimeException("utilisateur non trouver"));
-        utilisateur.setStatut(Utilisateur.Statut.ACTIF);
+        
+        //inutile car pas besoin de mettre le statut a ACTIF avant de supprimer un utilisateur                                              utilisateur.setStatut(Utilisateur.Statut.ACTIF);
         utilisateurRepository.delete(utilisateur);
         return "Utilisateur supprimer avec succes";
         

@@ -5,16 +5,22 @@ spring:
   cloud:
     config:
       enabled: false
+
+  # datasource:
+  #   url: jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres
+  #   username: postgres.lfndwsyzicnktfxmgxhw
+  #   password: gdg@2026!Secure
+  #   driver-class-name: org.postgresql.Driver
   
   datasource:
-    url: jdbc:postgresql://localhost:5432/gdg_auth
-    username: postgres
-    password: JOJOloj
-    driver-class-name: org.postgresql.Driver
+   url: jdbc:postgresql://localhost:5432/gdg_plateforme
+   username: postgres
+   password: 12345
+   driver-class-name: org.postgresql.Driver
   
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -35,3 +41,6 @@ logging:
 services:
   stock:
     url: http://localhost:8083
+gdg:
+  auth:
+    url: http://localhost:8081

@@ -16,6 +16,7 @@ com\gdg\service_stock\exception\GlobalExceptionHandler.class
 com\gdg\service_stock\dtos\DtoMouvement$dtoMouvementStockReponse.class
 com\gdg\service_stock\dtos\DtoStock$UpdateSeuilDTO$UpdateSeuilDTOBuilder.class
 com\gdg\service_stock\entity\StockProduit$StockProduitBuilder.class
+com\gdg\service_stock\config\RestTemplateConfig.class
 com\gdg\service_stock\dtos\DtoStock$StockProduitDTO$StockProduitDTOBuilder.class
 com\gdg\service_stock\dtos\DtoMouvement.class
 com\gdg\service_stock\config\SecurityConfig.class

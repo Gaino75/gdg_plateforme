@@ -1,22 +1,161 @@
+
 version: '3.8'
 
 services:
+  # ============================================================
+  # RABBITMQ
+  # ============================================================
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: gpg-rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+    container_name: gdg-rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-    healthcheck:
-      test: rabbitmq-diagnostics -q ping
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - gdg-network
 
-volumes:
-  rabbitmq_data:
+  # ============================================================
+  # CONFIG SERVER
+  # ============================================================
+  config-server:
+    build: ./backend/gdg-config-server
+    container_name: gdg-config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - gdg-network
+
+  # ============================================================
+  # API GATEWAY
+  # ============================================================
+  gateway:
+    build: ./backend/gdg-gateway
+    container_name: gdg-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - config-server
+      - service-auth
+      - service-agences
+      - service-stock
+      - service-ventes
+      - service-reservations
+      - service-paiement
+      - service-notifications
+      - service-admin
+    networks:
+      - gdg-network
+
+  # ============================================================
+  # MICROSERVICES
+  # ============================================================
+  service-auth:
+    build: ./backend/gdg-service-auth
+    container_name: gdg-service-auth
+    ports:
+      - "8081:8081"
+    depends_on:
+      - config-server
+    networks:
+      - gdg-network
+
+  service-agences:
+    build: ./backend/gdg-service-agences
+    container_name: gdg-service-agences
+    ports:
+      - "8082:8082"
+    depends_on:
+      - config-server
+    networks:
+      - gdg-network
+
+  service-stock:
+    build: ./backend/gdg-service-stock
+    container_name: gdg-service-stock
+    ports:
+      - "8083:8083"
+    depends_on:
+      - config-server
+    networks:
+      - gdg-network
+
+  service-ventes:
+    build: ./backend/gdg-service-ventes
+    container_name: gdg-service-ventes
+    ports:
+      - "8084:8084"
+    depends_on:
+      - config-server
+    networks:
+      - gdg-network
+
+  service-reservations:
+    build: ./backend/gdg-service-reservations
+    container_name: gdg-service-reservations
+    ports:
+      - "8085:8085"
+    depends_on:
+      - config-server
+    networks:
+      - gdg-network
+
+  service-paiement:
+    build: ./backend/gdg-service-paiement
+    container_name: gdg-service-paiement
+    ports:
+      - "8086:8086"
+    depends_on:
+      - config-server
+    networks:
+      - gdg-network
+
+  service-notifications:
+    build: ./backend/gdg-service-notifications
+    container_name: gdg-service-notifications
+    ports:
+      - "8087:8087"
+    depends_on:
+      - config-server
+    networks:
+      - gdg-network
+
+  service-admin:
+    build: ./backend/gdg-service-admin
+    container_name: gdg-service-admin
+    ports:
+      - "8088:8088"
+    depends_on:
+      - config-server
+    networks:
+      - gdg-network
+
+networks:
+  gdg-network:
+    driver: bridge
+
+
+# version: '3.8'
+
+# services:
+#   rabbitmq:
+#     image: rabbitmq:3-management
+#     container_name: gpg-rabbitmq
+#     ports:
+#       - "5672:5672"
+#       - "15672:15672"
+#     environment:
+#       RABBITMQ_DEFAULT_USER: guest
+#       RABBITMQ_DEFAULT_PASS: guest
+#     volumes:
+#       - rabbitmq_data:/var/lib/rabbitmq
+#     healthcheck:
+#       test: rabbitmq-diagnostics -q ping
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+
+# volumes:
+#   rabbitmq_data:

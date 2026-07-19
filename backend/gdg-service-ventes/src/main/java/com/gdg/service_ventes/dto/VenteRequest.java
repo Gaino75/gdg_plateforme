@@ -35,7 +35,8 @@ public class VenteRequest {
     @NotNull(message = "Le mode de paiement est obligatoire")
     private Vente.ModePaiement modePaiement;
 
-    private Vente.TypeVente typeVente;
+    @Builder.Default
+    private Vente.TypeVente typeVente = Vente.TypeVente.HORS_LIGNE;
 
     private String referencePaiement;
 

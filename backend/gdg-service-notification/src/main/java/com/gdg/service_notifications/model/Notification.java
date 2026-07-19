@@ -37,7 +37,8 @@ public class Notification {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Canal canal;
+    @Builder.Default
+    private Canal canal=Canal.IN_APP;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -21,7 +21,7 @@ public class NotificationListener {
         String token = stringValue(event.get("tokenVerification"));
         NotificationRequest request = NotificationRequest.builder()
             .utilisateurId(longValue(event.get("userId")))
-            .titre("Bienvenue sur GPG !")
+            .titre("Bienvenue sur GDG !")
             .message("Votre compte a été créé. Vérifiez votre email avec ce lien : "
                 + "http://localhost:3000/verify-email?token=" + token)
             .typeNotification(Notification.TypeNotification.COMPTE_VALIDE)

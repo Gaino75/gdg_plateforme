@@ -32,7 +32,8 @@ public class Abonnement {
     private Long categorieProduitId;
 
     @Column(nullable = false)
-    private Boolean actif;
+    @Builder.Default
+    private Boolean actif=true;
 
     @CreationTimestamp
     @Column(name = "date_abonnement", nullable = false)

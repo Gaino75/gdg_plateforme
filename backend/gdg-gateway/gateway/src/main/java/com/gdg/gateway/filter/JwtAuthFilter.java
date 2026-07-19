@@ -255,7 +255,7 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
                     || "DISTRIBUTEUR".equals(role)
                     || "ADMIN".equals(role);
         }
-        if(chemin.contains("/critiques") || chemin.contains("/ historiques")) {
+        if(chemin.contains("/critiques") || chemin.contains("/historiques")) {
             return "DISTRIBUTEUR".equals(role)
                     || "ADMIN".equals(role);
         }

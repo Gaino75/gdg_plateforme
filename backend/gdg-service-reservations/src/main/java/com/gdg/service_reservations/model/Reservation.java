@@ -2,6 +2,7 @@ package com.gdg.service_reservations.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import lombok.Builder;
 
 @Entity
 @Table(name = "reservation", schema = "reservations_schema")
@@ -34,6 +35,7 @@ public class Reservation {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private StatutReservation statut = StatutReservation.EN_ATTENTE;
 
     @Column(name = "mode_paiement", length = 20)

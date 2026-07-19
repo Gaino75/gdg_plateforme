@@ -37,7 +37,8 @@ public class Signalement {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatutSignalement statut;
+    @Builder.Default
+    private StatutSignalement statut = StatutSignalement.EN_ATTENTE;
 
     @Column(columnDefinition = "TEXT")
     private String commentaire;

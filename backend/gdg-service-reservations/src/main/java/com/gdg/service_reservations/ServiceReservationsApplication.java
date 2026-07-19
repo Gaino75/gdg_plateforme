@@ -10,6 +10,9 @@ public class ServiceReservationsApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ServiceReservationsApplication.class, args);
+		System.out.println("========================================");
+        System.out.println("Service Reservation démarré sur le port 8085");
+        System.out.println("========================================");
 	}
 
 }

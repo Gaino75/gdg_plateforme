@@ -36,6 +36,7 @@ export const useAuth = () => useContext(AuthContext);
 
 /* Version Final */
 
+
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axiosInstance from '../services/axiosInstance';
 import { API } from '../constants/api';
@@ -129,8 +130,8 @@ export const useAuth = () => {
 };
 
 
-
 /*
+
 // ============================================================
 // VERSION DE TEST AVEC UTILISATEUR FICTIF (ACTIVE)
 // ============================================================

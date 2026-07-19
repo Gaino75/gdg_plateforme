@@ -7,39 +7,95 @@ spring:
   cloud:
     config:
       enabled: false
-  security:
-    user:
-      name: disabled
-      password: disabled
+  # datasource:
+  #   url: jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres
+  #   username: postgres.lfndwsyzicnktfxmgxhw
+  #   password: gdg@2026!Secure
+  #   driver-class-name: org.postgresql.Driver
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/gdg_auth
+    url: jdbc:postgresql://localhost:5432/gdg_plateforme
     username: postgres
-    password: JOJOloj
-    driver-class-name:  org.postgresql.Driver
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-    open-in-view: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
         default_schema: admin_schema
 
-
-jwt:
-  secret: sage-meliodas-GAZ-2026-secret-key-secure-2556bits
-  expiration: 3600000
+logging:
+  level:
+    com.gdg.admin: DEBUG
+    org.springframework.web: INFO
 
 gdg:
   agences:
     url: http://localhost:8082
   auth:
     url: http://localhost:8081
+  stock:
+    url: http://localhost:8083
+  notifications:
+    url: http://localhost:8087
+    
+
+# server:
+#   port: 8088
+
+# spring:
+#   application:
+#     name: gdg-service-admin
+#   cloud:
+#     config:
+#       enabled: false
+#   security:
+#     user:
+#       name: disabled
+#       password: disabled
+
+#     datasource:
+#       url: jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres
+#       username: postgres.lfndwsyzicnktfxmgxhw
+#       password: gdg@2026!Secure
+#       driver-class-name: org.postgresql.Driver
+#       hikari:
+#         maximum-pool-size: 10
+#         minimum-idle: 2
+#   # datasource:
+#   #   url: jdbc:postgresql://localhost:5432/gdg_auth
+#   #   username: postgres
+#   #   password: JOJOloj
+#   #   driver-class-name:  org.postgresql.Driver
+#   rabbitmq:
+#     host: localhost
+#     port: 5672
+#     username: guest
+#     password: guest
+
+#   jpa:
+#     hibernate:
+#       ddl-auto: update
+#     show-sql: true
+#     open-in-view: false
+#     properties:
+#       hibernate:
+#         dialect: org.hibernate.dialect.PostgreSQLDialect
+#         default_schema: admin_schema
+
+# jwt:
+#   secret: sage-meliodas-GAZ-2026-secret-key-secure-2556bits
+#   expiration: 3600000
+
+# gdg:
+#   agences:
+#     url: http://localhost:8082
+#   auth:
+#     url: http://localhost:8081

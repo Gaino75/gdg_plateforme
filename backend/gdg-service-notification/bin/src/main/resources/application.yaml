@@ -1,0 +1,76 @@
+spring:
+  application:
+    name: gdg-service-notifications
+  
+  # Désactiver le Config Server
+  cloud:
+    config:
+      enabled: false
+  
+    datasource:
+      url: jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres
+      username: postgres.lfndwsyzicnktfxmgxhw
+      password: gdg@2026!Secure
+      driver-class-name: org.postgresql.Driver
+  # datasource:
+  #   url: jdbc:postgresql://localhost:5432/gdg_auth
+  #   username: postgres
+  #   password: JOJOloj   # ⚠️ METTEZ VOTRE VRAI MOT DE PASSE
+  #   driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties: 
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: true
+        default_schema: notifications_schema
+    open-in-view: false
+   
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: sagemeliodas@gmail.com
+    password: apqa zjir ifjm ryxg
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: 
+
+server:
+  port: 8087
+
+logging:
+  level:
+    com.gdg: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+twilio:
+  account-sid: ${TWILIO_ACCOUNT_SID:}
+  auth-token: ${TWILIO_AUTH_TOKEN:}
+  phone-number: ${TWILIO_PHONE_NUMBER:}
+
+jwt:
+  secret: sage-meliodas-GAZ-2026-secret-key-secure-256bits
+
+app:
+  notifications:
+    duree-expiration-reservation: 30
+    nb-signalements-confirmation: 2
+    delai-signalement-heures: 2

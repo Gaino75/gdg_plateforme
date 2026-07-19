@@ -7,23 +7,40 @@ server:
 spring:
   application:
     name: gdg-service-auth
+  main:
+    allow-bean-definition-overriding: true 
   cloud:
     config:
       enabled: false
+  # datasource:
+  #   url: jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres
+  #   username: postgres.lfndwsyzicnktfxmgxhw
+  #   password: gdg@2026!Secure
+  #   driver-class-name: org.postgresql.Driver
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/gdg_auth
+    url: jdbc:postgresql://localhost:5432/gdg_plateforme
     username: postgres
-    password: JOJOloj
+    password: 12345
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_schema: auth_schema
   rabbitmq:
     host: localhost
     port: 5672
     username: guest
     password: guest
+
 jwt:
   secret: sage-meliodas-GAZ-2026-secret-key-secure-2556bits
   expiration: 3600000
@@ -31,7 +48,6 @@ jwt:
 logging:
   level:
     com.gdg.auth: DEBUG
-    org.springframework.web: DEBUG 
-    org.springframework.security: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: INFO
     root: ERROR
-

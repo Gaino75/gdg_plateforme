@@ -1,11 +1,15 @@
 package com.gdg.auth.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Email;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DistributeurRegisterRequest {
 
     @NotBlank(message = "Le nom est obligatoire")

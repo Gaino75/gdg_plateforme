@@ -66,16 +66,21 @@ public class ReservationService {
                 "Création de la réservation", consommateurId);
 
         if (modePaiement == ModePaiement.ORANGE_MONEY || modePaiement == ModePaiement.MTN_MOBILE_MONEY) {
-            Map<String, Object> paiement = paiementServiceClient.initierPaiement(
+            try {
+                Map<String, Object> paiement = paiementServiceClient.initierPaiement(
                     saved.getId(), consommateurId, agenceId, montantTotal,
                     modePaiement.name(), numeroTelephone
-            );
-            if (paiement != null && paiement.get("referenceTransaction") != null) {
-                saved.setReferencePaiement(paiement.get("referenceTransaction").toString());
-                saved = reservationRepository.save(saved);
+                );
+                if (paiement != null && paiement.get("referenceTransaction") != null) {
+                    saved.setReferencePaiement(paiement.get("referenceTransaction").toString());
+                    saved = reservationRepository.save(saved);
+                }
+            } catch (Exception e) {
+                System.err.println("Erreur lors de l'initialisation du paiement: " + e.getMessage());
             }
         }
 
+        System.out.println("Reservation créée: " + reference);
         return saved;
     }
 
@@ -138,6 +143,9 @@ public class ReservationService {
     }
 
     public Reservation getReservationById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("L'id de réservation ne peut pas être null");
+        }
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Réservation non trouvée avec l'id : " + id));
     }

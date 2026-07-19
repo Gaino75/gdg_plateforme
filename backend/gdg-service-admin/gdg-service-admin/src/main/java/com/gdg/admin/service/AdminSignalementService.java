@@ -16,6 +16,8 @@ public class AdminSignalementService {
     @Autowired
     private JournalAuditService journalAuditService;
 
+    // @Value("${gdg.notifications.url:http://localhost:8087}")
+    // private String notificationsBaseUrl; 
     private static final String NOTIF_URL =
         "http://localhost:8087";
 
