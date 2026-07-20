@@ -1,1 +1,6 @@
+com\gdg\gateway\filter\LoggingFilter.class
+com\gdg\gateway\filter\JwtAuthFilter.class
+com\gdg\gateway\config\CorsConfig.class
 com\gdg\gateway\ApiGatewayApplication.class
+com\gdg\gateway\config\RoutesOuvertesConfig.class
+com\gdg\gateway\util\JwtUtil.class

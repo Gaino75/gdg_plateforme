@@ -23,8 +23,8 @@ export default function LoginPage() {
       const { data } = await axiosInstance.post('/auth/login', { email, motDePasse });
       login(data.token, data);
       if (data.role === 'ADMIN') navigate('/admin');
-      else if (data.role === 'DISTRIBUTEUR') navigate('/profil');
-      else navigate('/profil');
+      else if (data.role === 'DISTRIBUTEUR') navigate('/distributeur');
+      else navigate('/consommateur');
     } catch (err) {
       setError(err.response?.data?.message || 'Email ou mot de passe incorrect.');
     } finally {

@@ -117,6 +117,7 @@ private RabbitTemplate rabbitTemplate;
         );
 
         return new AuthResponse(
+            utilisateur.getId(),
             token,
             utilisateur.getRole().name(),
             utilisateur.getNom(),
@@ -173,6 +174,7 @@ private RabbitTemplate rabbitTemplate;
             );
 
             return new AuthResponse(
+                utilisateur.getId(),
                 token,
                 utilisateur.getRole().name(),
                 utilisateur.getNom(),

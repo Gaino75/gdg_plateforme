@@ -19,9 +19,9 @@ spring:
   #   driver-class-name: org.postgresql.Driver
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/gdg_plateforme
+    url: jdbc:postgresql://localhost:5432/gdg_auth
     username: postgres
-    password: 12345
+    password: JOJOloj
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10

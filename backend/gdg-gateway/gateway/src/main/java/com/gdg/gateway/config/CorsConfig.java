@@ -67,8 +67,9 @@ public class CorsConfig {
         //   PUT    → modifier des données (profil agence, statut réservation)
         //   DELETE → supprimer des données (annuler une réservation)
         //   OPTIONS → requête préliminaire CORS (le navigateur l'envoie avant chaque requête cross-origin)
+        //   PATCH  → modifier partiellement des données (seuils de stock)
         // --------------------------------------------------------
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
         // --------------------------------------------------------
         // HEADERS AUTORISÉS DANS LES REQUÊTES
@@ -76,8 +77,9 @@ public class CorsConfig {
         // Le frontend peut envoyer ces headers :
         //   Content-Type   → type du corps de la requête (application/json)
         //   Authorization  → le token JWT (Bearer eyJ...)
+        //   X-Distributeur-Id, UserId → En-têtes personnalisés
         // --------------------------------------------------------
-        config.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+        config.setAllowedHeaders(List.of("Content-Type", "Authorization", "X-Distributeur-Id", "UserId"));
 
         // --------------------------------------------------------
         // CREDENTIALS

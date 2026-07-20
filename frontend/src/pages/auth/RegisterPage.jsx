@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Phone, Store, MapPin, Lock, ArrowRight, Fuel } from 'lucide-react';
 import axiosInstance from '../../services/axiosInstance';
+import { useAuth } from '../../context/AuthContext';
 
 export default function RegisterPage() {
+  const { login } = useAuth();
   const [role, setRole] = useState('CONSOMMATEUR'); // ou 'DISTRIBUTEUR'
   const [form, setForm] = useState({
     nom: '', prenom: '', email: '', telephone: '', motDePasse: '',
@@ -21,6 +23,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('BOUTON CLIQUE',form);
     setError('');
     if (!accepteConditions) {
       setError('Merci d\'accepter les conditions d\'utilisation.');
@@ -34,6 +37,12 @@ export default function RegisterPage() {
           motDePasse: form.motDePasse, telephone: form.telephone,
           villeResidence: form.villeResidence, dateNaissance: form.dateNaissance || null,
         });
+        // Connexion automatique après inscription
+        const { data: session } = await axiosInstance.post('/auth/login', {
+          email: form.email, motDePasse: form.motDePasse,
+        });
+        login(session.token, session);
+        navigate('/consommateur');
       } else {
         const { data: distributeur } = await axiosInstance.post('/auth/register/distributeur', {
           nom: form.nom, prenom: form.prenom, email: form.email,
@@ -49,8 +58,11 @@ export default function RegisterPage() {
           enseigneId: 1, // TODO: remplacer par un vrai sélecteur d'enseigne
           villeId: 1,    // TODO: remplacer par un vrai sélecteur de ville (GET /api/villes)
         }, { headers: { 'X-Distributeur-Id': session.id, Authorization: `Bearer ${session.token}` } });
+        
+        // Connexion automatique après inscription & création agence
+        login(session.token, session);
+        navigate('/distributeur');
       }
-      navigate('/connexion');
     } catch (err) {
       setError(err.response?.data?.message || 'Une erreur est survenue.');
     } finally {
