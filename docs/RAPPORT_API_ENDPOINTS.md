@@ -92,6 +92,7 @@ docker compose up -d
 |---------|------------------|------|-------------|------------------|
 | POST | `/auth/register/consommateur` | Public | Inscription consommateur | `201` `{ token, role, userId }` |
 | POST | `/auth/register/distributeur` | Public | Inscription distributeur | `201` |
+| POST | `/auth/register/admin` | Public | Inscription administrateur | `201` |
 | POST | `/auth/login` | Public | Connexion | `200` `{ token, role, email }` |
 | POST | `/auth/logout` | JWT | Déconnexion | `200` |
 | GET | `/auth/verify-email?token=` | Public | Vérification email | `200` |

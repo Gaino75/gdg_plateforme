@@ -19,7 +19,7 @@ const NavbarConsumer = () => {
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
       <div className="container-custom h-16 flex items-center justify-between">
         <Link to={ROUTES.CONSUMER_DASHBOARD} className="flex items-center gap-2">
-          <img src="/logo-gdg.svg" alt="GDG" className="h-8 w-8" />
+          <img src="/logo-gdg.png" alt="GDG" className="h-8 w-8" />
           <span className="font-bold text-[#1E3A5F]">GDG</span>
         </Link>
 

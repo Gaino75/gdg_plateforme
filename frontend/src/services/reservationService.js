@@ -12,7 +12,8 @@ export const reservationService = {
   getByStatut: (statut) => axiosInstance.get(API.RESERVATIONS.STATUT(statut)),
   annuler: (id, motif, effectuePar) => 
     axiosInstance.put(API.RESERVATIONS.ANNULER(id, motif, effectuePar)),
-  recuperer: (id) => axiosInstance.put(API.RESERVATIONS.RECUPERER(id)),
+  // recuperer: (id) => axiosInstance.put(API.RESERVATIONS.RECUPERER(id)),
+  recuperer: (id, consommateurId) => axiosInstance.put(API.RESERVATIONS.RECUPERER(id, consommateurId)),
   confirmerPaiement: (id, referencePaiement) => 
     axiosInstance.put(API.RESERVATIONS.PAIEMENT(id, referencePaiement)),
   getStatistiques: () => axiosInstance.get(API.RESERVATIONS.STATISTIQUES),

@@ -97,6 +97,7 @@ private RabbitTemplate rabbitTemplate;
         //  Envoyer email via Service Notifications
         // notificationService.envoyerEmailVerification(email, tokenVerif)
         // Publier événement inscription
+        try{
        rabbitTemplate.convertAndSend(
              RabbitMQConfig.EXCHANGE,
             RabbitMQConfig.KEY_USER_REGISTERED,
@@ -109,6 +110,9 @@ private RabbitTemplate rabbitTemplate;
             utilisateur.getTokenVerification()
     )
 );
+        } catch(Exception e){
+            System.err.println("[AUTH] RabbitMQ indisponible - email de bienvenue non envoye: "+e.getMessage());
+        }
 
         // Générer JWT
         String token = jwtUtil.generateToken(
@@ -117,9 +121,11 @@ private RabbitTemplate rabbitTemplate;
         );
 
         return new AuthResponse(
+            utilisateur.getId(),
             token,
             utilisateur.getRole().name(),
             utilisateur.getNom(),
+            utilisateur.getPrenom(),
             utilisateur.getEmail()
         );
     }
@@ -173,9 +179,11 @@ private RabbitTemplate rabbitTemplate;
             );
 
             return new AuthResponse(
+                utilisateur.getId(),
                 token,
                 utilisateur.getRole().name(),
                 utilisateur.getNom(),
+                utilisateur.getPrenom(),
                 utilisateur.getEmail()
             );
 

@@ -19,7 +19,7 @@ const NavbarAdmin = () => {
     <nav className="bg-[#1E3A5F] text-white sticky top-0 z-40">
       <div className="container-custom h-16 flex items-center justify-between">
         <Link to={ROUTES.ADMIN_DASHBOARD} className="flex items-center gap-2">
-          <img src="/logo-gdg.svg" alt="GDG" className="h-8 w-8 invert" />
+          <img src="/logo-gdg.png" alt="GDG" className="h-8 w-8 invert" />
           <span className="font-bold">GDG</span>
           <span className="text-xs text-gray-300 hidden md:inline">Administration</span>
         </Link>

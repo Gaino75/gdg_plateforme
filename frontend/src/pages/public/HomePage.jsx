@@ -12,6 +12,7 @@ import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 
 const HomePage = () => {
+
   const [enseignes, setEnseignes] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,22 +26,15 @@ const HomePage = () => {
   const fetchData = async () => {
     try {
 
-        //appel des vrai endpoint pour ne pas simuler les stats
-  const [enseignesRes, statsAgences, statsVilles] = await Promise.all([
-    axiosInstance.get(API.AGENCES.ENSEIGNES),
-    axiosInstance.get(API.AGENCES.STATISTIQUES),
-    axiosInstance.get(API.AGENCES.VILLES),
-  ]);
+      //appel des vrai endpoint pour ne pas simuler les stats
+      const [enseignesRes, statsAgences, statsVilles] = await Promise.all([
+        axiosInstance.get(API.AGENCES.ENSEIGNES),
+        axiosInstance.get(API.AGENCES.STATISTIQUES),
+        axiosInstance.get(API.AGENCES.VILLES),
+      ]);
+
       setEnseignes(enseignesRes.data);
-      
-      // Stats simulées (à remplacer par un vrai endpoint)
-      /*setStats({
-        nbEnseignes: enseignesRes.data.length,
-        nbAgences: 28,
-        nbDisponibles: 18,
-        nbVilles: 27,
-      });*/
-      
+
       // stats reel
       setStats({
         nbEnseignes: enseignesRes.data.length,
@@ -49,7 +43,7 @@ const HomePage = () => {
 
       }
       );
-      
+
     } catch (error) {
       console.error('Erreur de chargement', error);
     } finally {
@@ -110,7 +104,7 @@ const HomePage = () => {
       <h2 className="text-2xl font-bold text-[#1E3A5F] mb-6">
         Nos compagnies partenaires
       </h2>
-      
+
       {filteredEnseignes.length === 0 ? (
         <p className="text-gray-500 text-center py-10">Aucune compagnie trouvée</p>
       ) : (
