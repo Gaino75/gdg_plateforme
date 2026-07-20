@@ -74,9 +74,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, motDePasse) => {
-    const response = await axiosInstance.post(API.AUTH.LOGIN, { email, motDePasse });
-    const { token, ...userData } = response.data;
+  const login = async (param1, param2) => {
+    let token, userData;
+    if (typeof param1 === 'string' && param1.includes('.') && param2 && typeof param2 === 'object') {
+      // Appel direct avec token et données utilisateur (ex: LoginPage)
+      token = param1;
+      const { token: _, ...rest } = param2;
+      userData = rest;
+    } else {
+      // Appel avec email et mot de passe (ex: LoginForm)
+      const response = await axiosInstance.post(API.AUTH.LOGIN, { email: param1, motDePasse: param2 });
+      token = response.data.token;
+      const { token: _, ...rest } = response.data;
+      userData = rest;
+    }
     
     localStorage.setItem('gdg_token', token);
     localStorage.setItem('gdg_user', JSON.stringify(userData));

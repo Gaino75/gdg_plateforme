@@ -92,9 +92,13 @@ public ResponseEntity<?> registerAdmin(
     @PostMapping("/logout")
     public ResponseEntity<String> logout(
             @RequestHeader("Authorization") String token,
-            @RequestHeader("UserId") Long userId) {
+            @RequestHeader(value = "UserId", required = false) Long userId) {
         String jwt = token.replace("Bearer ", "");
-        return ResponseEntity.ok(authService.logout(jwt, userId));
+        Long finalUserId = userId;
+        if (finalUserId == null) {
+            finalUserId = jwtUtil.extractUserId(jwt);
+        }
+        return ResponseEntity.ok(authService.logout(jwt, finalUserId));
     }
 
     // ── VALIDER TOKEN ────────────────────────────

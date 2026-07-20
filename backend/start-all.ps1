@@ -23,8 +23,8 @@
  Write-Host "Nettoyage :suppression de l'ancien conteneur RabbitMQ s'il existe..." -ForegroundColor Cyan
  docker rm -f gpg-rabbitmq > $null 2>&1
   
-write-Host "Docker est pret.Demarrage de RabbitMQ...." -ForegroundColor Cyan
-docker compose -f ..\docker-compose.yml up  -d
+write-Host "Docker est pret.Demarrage de RabbitMQ et PostgreSQL...." -ForegroundColor Cyan
+docker compose -f ..\docker-compose.yml up -d rabbitmq postgres
 Start-Sleep -Seconds 8
  
  
