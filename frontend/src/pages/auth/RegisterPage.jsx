@@ -4,10 +4,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Phone, Store, MapPin, Lock, ArrowRight, Fuel } from 'lucide-react';
 import axiosInstance from '../../services/axiosInstance';
-import { useAuth } from '../../context/AuthContext';
 
 export default function RegisterPage() {
-  const { login } = useAuth();
   const [role, setRole] = useState('CONSOMMATEUR'); // ou 'DISTRIBUTEUR'
   const [form, setForm] = useState({
     nom: '', prenom: '', email: '', telephone: '', motDePasse: '',
@@ -37,12 +35,6 @@ export default function RegisterPage() {
           motDePasse: form.motDePasse, telephone: form.telephone,
           villeResidence: form.villeResidence, dateNaissance: form.dateNaissance || null,
         });
-        // Connexion automatique après inscription
-        const { data: session } = await axiosInstance.post('/auth/login', {
-          email: form.email, motDePasse: form.motDePasse,
-        });
-        login(session.token, session);
-        navigate('/consommateur');
       } else {
         const { data: distributeur } = await axiosInstance.post('/auth/register/distributeur', {
           nom: form.nom, prenom: form.prenom, email: form.email,
@@ -58,11 +50,8 @@ export default function RegisterPage() {
           enseigneId: 1, // TODO: remplacer par un vrai sélecteur d'enseigne
           villeId: 1,    // TODO: remplacer par un vrai sélecteur de ville (GET /api/villes)
         }, { headers: { 'X-Distributeur-Id': session.id, Authorization: `Bearer ${session.token}` } });
-        
-        // Connexion automatique après inscription & création agence
-        login(session.token, session);
-        navigate('/distributeur');
       }
+      navigate('/connexion');
     } catch (err) {
       setError(err.response?.data?.message || 'Une erreur est survenue.');
     } finally {
@@ -89,6 +78,8 @@ export default function RegisterPage() {
       </div>
 
       <div className="flex-1 flex items-center justify-center bg-slate-50 p-8">
+
+      
         <form onSubmit={handleSubmit} className="w-full max-w-sm">
           <h2 className="text-2xl font-bold text-slate-900">Créer un compte</h2>
           <p className="text-slate-500 text-sm mb-6">Choisissez votre profil pour commencer.</p>
