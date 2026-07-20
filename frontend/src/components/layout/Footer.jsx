@@ -10,7 +10,7 @@ const Footer = () => {
       <div className="container-custom">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
-            <img src="/logo-gdg.svg" alt="GDG" className="h-8 w-8" />
+            <img src="/logo-gdg.png" alt="GDG" className="h-8 w-8" />
             <span className="font-semibold text-gray-900">GDG</span>
             <span className="text-sm text-gray-500">Gaz Distribution & Gestion</span>
           </div>

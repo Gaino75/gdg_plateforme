@@ -28,7 +28,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to={ROUTES.HOME} className="flex items-center gap-2">
-            <img src="/logo-gdg.svg" alt="GDG" className="h-10 w-10" />
+            <img src="/logo-gdg.png" alt="GDG" className="h-10 w-10" />
             <span className="text-xl font-bold tracking-tight">GDG</span>
             <span className="hidden md:inline text-xs text-gray-300 font-light">
               Gaz Distribution & Gestion

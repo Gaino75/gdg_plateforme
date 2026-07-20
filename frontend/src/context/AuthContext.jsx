@@ -99,7 +99,11 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axiosInstance.post(API.AUTH.LOGOUT);
+      await axiosInstance.post(API.AUTH.LOGOUT, {}, {
+        headers:{
+          'UserId': user?.id
+        }
+      });
     } catch (error) {
       // Ignorer les erreurs de déconnexion
     }

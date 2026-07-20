@@ -34,6 +34,8 @@ import { ROUTES } from './constants/routes';
 // Layouts
 import PublicLayout from './components/layout/PublicLayout';
 import DashboardLayout from './components/layout/DashboardLayout';
+import StationsPage from './pages/public/StationsPages';
+import ContactPage from './pages/public/ContactPage';
 
 // Guards
 import { PrivateRoute, ConsumerRoute, DistributorRoute, AdminRoute } from './components/guards';
@@ -98,12 +100,14 @@ function App() {
         <Route element={<PublicLayout />}>
           <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.ENSEIGNE} element={<EnseigneDetailPage />} />
-          <Route path={ROUTES.AGENCE_PUBLIC} element={<AgenceDetailPublicPage />} />
+          <Route path={ROUTES.AGENCE} element={<AgenceDetailPublicPage />} />
           <Route path={ROUTES.LOGIN} element={<LoginPage />} />
           <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
           <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path={ROUTES.STATIONS} element={<StationsPage/>}/>
+          <Route path={ROUTES.CONTACT} element={<ContactPage/>}/>
         </Route>
 
         {/* Routes Consommateur */}

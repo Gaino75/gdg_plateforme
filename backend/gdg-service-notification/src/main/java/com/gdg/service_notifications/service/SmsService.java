@@ -50,4 +50,9 @@ public class SmsService {
             throw new RuntimeException("Erreur d'envoi SMS", e);
         }
     }
+/*
+    public void sendSms(String phoneNumber, String message){
+        //SMS desactive pour le developpement local
+        log.info("[SMS SIMULE] A {} : {}", phoneNumber,message);
+    }*/
 }
