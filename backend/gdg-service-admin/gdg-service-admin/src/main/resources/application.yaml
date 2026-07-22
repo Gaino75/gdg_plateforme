@@ -73,11 +73,11 @@ gdg:
 #   #   username: postgres
 #   #   password: JOJOloj
 #   #   driver-class-name:  org.postgresql.Driver
-#   rabbitmq:
-#     host: localhost
-#     port: 5672
-#     username: guest
-#     password: guest
+  rabbitmq:
+     host: localhost
+     port: 5672
+     username: guest
+     password: guest
 
 #   jpa:
 #     hibernate:

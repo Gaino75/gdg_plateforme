@@ -21,6 +21,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('BOUTON CLIQUE',form);
     setError('');
     if (!accepteConditions) {
       setError('Merci d\'accepter les conditions d\'utilisation.');
@@ -77,6 +78,8 @@ export default function RegisterPage() {
       </div>
 
       <div className="flex-1 flex items-center justify-center bg-slate-50 p-8">
+
+      
         <form onSubmit={handleSubmit} className="w-full max-w-sm">
           <h2 className="text-2xl font-bold text-slate-900">Créer un compte</h2>
           <p className="text-slate-500 text-sm mb-6">Choisissez votre profil pour commencer.</p>

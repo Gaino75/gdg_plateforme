@@ -3,6 +3,24 @@ version: '3.8'
 
 services:
   # ============================================================
+  # POSTGRESQL DATABASE
+  # ============================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: gdg-postgres
+    environment:
+      POSTGRES_DB: gdg_auth
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: JOJOloj
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - gdg-network
+
+  # ============================================================
   # RABBITMQ
   # ============================================================
   rabbitmq:
@@ -32,7 +50,7 @@ services:
   # API GATEWAY
   # ============================================================
   gateway:
-    build: ./backend/gdg-gateway
+    build: ./backend/gdg-gateway/gateway
     container_name: gdg-gateway
     ports:
       - "8080:8080"
@@ -46,6 +64,15 @@ services:
       - service-paiement
       - service-notifications
       - service-admin
+    environment:
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_URI=http://service-auth:8081
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_URI=http://service-agences:8082
+      - SPRING_CLOUD_GATEWAY_ROUTES_2_URI=http://service-stock:8083
+      - SPRING_CLOUD_GATEWAY_ROUTES_3_URI=http://service-ventes:8084
+      - SPRING_CLOUD_GATEWAY_ROUTES_4_URI=http://service-reservations:8085
+      - SPRING_CLOUD_GATEWAY_ROUTES_5_URI=http://service-paiement:8086
+      - SPRING_CLOUD_GATEWAY_ROUTES_6_URI=http://service-notifications:8087
+      - SPRING_CLOUD_GATEWAY_ROUTES_7_URI=http://service-admin:8088
     networks:
       - gdg-network
 
@@ -53,22 +80,38 @@ services:
   # MICROSERVICES
   # ============================================================
   service-auth:
-    build: ./backend/gdg-service-auth
+    build: ./backend/gdg-service-auth/gdg-service-auth
     container_name: gdg-service-auth
     ports:
       - "8081:8081"
     depends_on:
       - config-server
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gdg_auth
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=JOJOloj
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
     networks:
       - gdg-network
 
   service-agences:
-    build: ./backend/gdg-service-agences
+    build: ./backend/gdg-service-agence
     container_name: gdg-service-agences
     ports:
       - "8082:8082"
     depends_on:
       - config-server
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gdg_auth
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=JOJOloj
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
     networks:
       - gdg-network
 
@@ -79,6 +122,14 @@ services:
       - "8083:8083"
     depends_on:
       - config-server
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gdg_auth
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=JOJOloj
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
     networks:
       - gdg-network
 
@@ -89,6 +140,14 @@ services:
       - "8084:8084"
     depends_on:
       - config-server
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gdg_auth
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=JOJOloj
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
     networks:
       - gdg-network
 
@@ -99,6 +158,14 @@ services:
       - "8085:8085"
     depends_on:
       - config-server
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gdg_auth
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=JOJOloj
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
     networks:
       - gdg-network
 
@@ -109,32 +176,59 @@ services:
       - "8086:8086"
     depends_on:
       - config-server
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gdg_auth
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=JOJOloj
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
     networks:
       - gdg-network
 
   service-notifications:
-    build: ./backend/gdg-service-notifications
+    build: ./backend/gdg-service-notification
     container_name: gdg-service-notifications
     ports:
       - "8087:8087"
     depends_on:
       - config-server
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gdg_auth
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=JOJOloj
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
     networks:
       - gdg-network
 
   service-admin:
-    build: ./backend/gdg-service-admin
+    build: ./backend/gdg-service-admin/gdg-service-admin
     container_name: gdg-service-admin
     ports:
       - "8088:8088"
     depends_on:
       - config-server
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gdg_auth
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=JOJOloj
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
     networks:
       - gdg-network
 
 networks:
   gdg-network:
     driver: bridge
+
+volumes:
+  postgres_data:
 
 
 # version: '3.8'
