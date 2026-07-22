@@ -13,9 +13,9 @@ spring:
   #   driver-class-name: org.postgresql.Driver
   
   datasource:
-   url: jdbc:postgresql://localhost:5432/gdg_plateforme
-   username: postgres
-   password: 12345
+   url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_auth}
+   username: ${DATABASE_USERNAME:postgres}
+   password: ${DATABASE_PASSWORD:12345}
    driver-class-name: org.postgresql.Driver
   
   jpa:
@@ -30,7 +30,7 @@ spring:
     open-in-view: false
 
 server:
-  port: 8084
+  port: ${PORT:8084}
 
 logging:
   level:
@@ -40,7 +40,7 @@ logging:
 
 services:
   stock:
-    url: http://localhost:8083
+    url: ${STOCK_SERVICE_URL:http://localhost:8083}
 gdg:
   auth:
-    url: http://localhost:8081
+    url: ${AUTH_SERVICE_URL:http://localhost:8081}

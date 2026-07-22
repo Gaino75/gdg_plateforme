@@ -15,10 +15,8 @@ export const API = {
     FORGOT_PASSWORD: `${GATEWAY_URL}/auth/forgot-password`,
     RESET_PASSWORD: `${GATEWAY_URL}/auth/reset-password`,
     ADMIN_USERS: `${GATEWAY_URL}/auth/admin/users`,
-    SUSPENDRE_USER: (id) =>
-      `${GATEWAY_URL}/auth/admin/utilisateurs/${id}/suspendre`,
-    REACTIVER_USER: (id) =>
-      `${GATEWAY_URL}/auth/admin/utilisateurs/${id}/reactiver`,
+    SUSPENDRE_USER: (id) => `${GATEWAY_URL}/auth/admin/utilisateurs/${id}/suspendre`,
+    REACTIVER_USER: (id) => `${GATEWAY_URL}/auth/admin/utilisateurs/${id}/reactiver`,
     DELETE_USER: (id) => `${GATEWAY_URL}/auth/admin/utilisateurs/${id}`,
   },
 

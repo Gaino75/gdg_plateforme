@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: ${PORT:8081}
   error:
     include-message: always
     include-stacktrace: always
@@ -19,9 +19,9 @@ spring:
   #   driver-class-name: org.postgresql.Driver
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/gdg_plateforme
-    username: postgres
-    password: 12345
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_auth}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:JOJOloj}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -36,14 +36,14 @@ spring:
         format_sql: true
         default_schema: auth_schema
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 
 jwt:
-  secret: sage-meliodas-GAZ-2026-secret-key-secure-2556bits
-  expiration: 3600000
+  secret: ${JWT_SECRET:$sage-meliodas-GAZ-2026-secret-key-secure-2556bits}
+  expiration: ${JWT_EXPIRATION:3600000}
 
 logging:
   level:
