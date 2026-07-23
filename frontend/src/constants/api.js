@@ -15,15 +15,8 @@ export const API = {
     FORGOT_PASSWORD: `${GATEWAY_URL}/auth/forgot-password`,
     RESET_PASSWORD: `${GATEWAY_URL}/auth/reset-password`,
     ADMIN_USERS: `${GATEWAY_URL}/auth/admin/users`,
-<<<<<<< HEAD
     SUSPENDRE_USER: (id) => `${GATEWAY_URL}/auth/admin/utilisateurs/${id}/suspendre`,
     REACTIVER_USER: (id) => `${GATEWAY_URL}/auth/admin/utilisateurs/${id}/reactiver`,
-=======
-    SUSPENDRE_USER: (id) =>
-      `${GATEWAY_URL}/auth/admin/utilisateurs/${id}/suspendre`,
-    REACTIVER_USER: (id) =>
-      `${GATEWAY_URL}/auth/admin/utilisateurs/${id}/reactiver`,
->>>>>>> 01106b9b2860638a7baeb693a3aa525c04b7b6c2
     DELETE_USER: (id) => `${GATEWAY_URL}/auth/admin/utilisateurs/${id}`,
   },
 
@@ -49,8 +42,10 @@ export const API = {
   // Stock
   STOCK: {
     CATEGORIES: `${GATEWAY_URL}/api/categories`,
-    PUBLIC_DISPONIBILITE: (agenceId) =>
-      `${GATEWAY_URL}/api/stocks/public/${agenceId}/disponibilite`,
+    PUBLIC_DISPONIBILITE:
+      `${GATEWAY_URL}/api/stocks/public`,//${agenceId}/disponibilite`,
+
+     // PUBLIC_DISPONIBILITE: (agenceId) => `${GATEWAY_URL}/api/stocks/public`,//${agenceId}/disponibilite`,
     AGENCE: (agenceId) => `${GATEWAY_URL}/api/stocks/agence/${agenceId}`,
     CRITIQUES: (agenceId) =>
       `${GATEWAY_URL}/api/stocks/agence/${agenceId}/critiques`,

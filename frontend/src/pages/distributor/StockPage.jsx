@@ -11,6 +11,9 @@ import Loader from '../../components/ui/Loader';
 import Badge from '../../components/ui/Badge';
 import ConfirmDialog from '../../components/ui/ConfirmDialog';
 import { formatDateTime } from '../../utils/formatters';
+import { Link } from 'lucide-react';
+import { Package } from 'lucide-react';
+import {ROUTES} from '../../constants/routes';
 
 const StockPage = () => {
   const { user } = useAuth();

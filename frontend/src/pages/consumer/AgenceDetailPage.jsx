@@ -30,7 +30,7 @@ const AgenceDetailPage = () => {
     try {
       const [agenceRes, stockRes] = await Promise.all([
         axiosInstance.get(`${API.AGENCES.BASE}/${id}`),
-        axiosInstance.get(API.STOCK.PUBLIC(id)),
+        axiosInstance.get(`${API.STOCK.PUBLIC_DISPONIBILITE}/${id}/disponibilite`),
       ]);
       setAgence(agenceRes.data);
       setStock(stockRes.data);

@@ -17,4 +17,5 @@ export const reservationService = {
   confirmerPaiement: (id, referencePaiement) => 
     axiosInstance.put(API.RESERVATIONS.PAIEMENT(id, referencePaiement)),
   getStatistiques: () => axiosInstance.get(API.RESERVATIONS.STATISTIQUES),
+  getHistorique: (id) => axiosInstance.get(API.RESERVATIONS.HISTORIQUE(id)),
 };

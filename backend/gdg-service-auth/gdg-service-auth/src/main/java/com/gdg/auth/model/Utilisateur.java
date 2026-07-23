@@ -4,9 +4,21 @@ package com.gdg.auth.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 @Entity
 @Table(name = "utilisateur", schema = "auth_schema")
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "role",discriminatorType=DiscriminatorType.STRING)
+
+@JsonTypeInfo(use =JsonTypeInfo.Id.NAME, property = "role", visible = true)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = Consommateur.class, name = "CONSOMMATEUR"),
+    @JsonSubTypes.Type(value = Distributeur.class, name = "DISTRIBUTEUR"),
+    @JsonSubTypes.Type(value = Administrateur.class, name = "ADMIN"),
+})
+
 public abstract class Utilisateur {
 
     @Id

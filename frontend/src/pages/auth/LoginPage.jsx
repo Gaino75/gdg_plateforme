@@ -21,7 +21,7 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      const { data } = await axiosInstance.post(API.AUTH.LOGIN, { email, motDePasse });
+      const { data } = await /*login(email, motDePasse);*/axiosInstance.post(API.AUTH.LOGIN, { email, motDePasse });
       login(data.token, data);
       if (data.role === 'ADMIN') navigate('/admin');
       else if (data.role === 'DISTRIBUTEUR') navigate('/distributeur');

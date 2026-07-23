@@ -98,127 +98,127 @@ const ParametresAgencePage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Logo *///}
-          /*
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-            <p className="text-sm text-gray-500 mb-2">Logo de facture</p>
-            <p className="text-xs text-gray-400">PNG ou SVG, 512×512px recommandé</p>
-            <Button variant="outline" size="sm" className="mt-3">
-              Choisir un fichier
-            </Button>
-          </div>
+/*
+<div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+  <p className="text-sm text-gray-500 mb-2">Logo de facture</p>
+  <p className="text-xs text-gray-400">PNG ou SVG, 512×512px recommandé</p>
+  <Button variant="outline" size="sm" className="mt-3">
+    Choisir un fichier
+  </Button>
+</div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Nom de l'agence"
-              value={form.nom}
-              onChange={(e) => setForm({ ...form, nom: e.target.value })}
-              required
-            />
-            <Input
-              label="Téléphone"
-              value={form.telephone}
-              onChange={(e) => setForm({ ...form, telephone: e.target.value })}
-            />
-          </div>
+<div className="grid grid-cols-2 gap-4">
+  <Input
+    label="Nom de l'agence"
+    value={form.nom}
+    onChange={(e) => setForm({ ...form, nom: e.target.value })}
+    required
+  />
+  <Input
+    label="Téléphone"
+    value={form.telephone}
+    onChange={(e) => setForm({ ...form, telephone: e.target.value })}
+  />
+</div>
 
-          <Input
-            label="Email"
-            type="email"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
+<Input
+  label="Email"
+  type="email"
+  value={form.email}
+  onChange={(e) => setForm({ ...form, email: e.target.value })}
+/>
+
+<Input
+  label="Adresse"
+  value={form.adresse}
+  onChange={(e) => setForm({ ...form, adresse: e.target.value })}
+/>
+
+<div className="grid grid-cols-2 gap-4">
+  <Input
+    label="Latitude"
+    value={form.latitude}
+    onChange={(e) => setForm({ ...form, latitude: e.target.value })}
+    placeholder="5.473°"
+  />
+  <Input
+    label="Longitude"
+    value={form.longitude}
+    onChange={(e) => setForm({ ...form, longitude: e.target.value })}
+    placeholder="10.417°"
+  />
+</div>
+
+<Textarea
+  label="En-tête personnalisé de facture"
+  value={form.enteteFacture}
+  onChange={(e) => setForm({ ...form, enteteFacture: e.target.value })}
+  placeholder="Total Bafoussam Centre — Distribution agréée de gaz domestique"
+  rows={2}
+/>
+
+<Textarea
+  label="Pied de facture"
+  value={form.piedFacture}
+  onChange={(e) => setForm({ ...form, piedFacture: e.target.value })}
+  placeholder="Merci de votre confiance"
+  rows={2}
+/>
+
+{/* Horaires *///}
+
+/*
+<div>
+  <h3 className="font-semibold text-gray-900 mb-3">Horaires d'ouverture</h3>
+  <div className="space-y-2">
+    {horaires.map((h, index) => (
+      <div key={h.jour} className="flex items-center gap-3">
+        <span className="w-24 text-sm font-medium text-gray-600">{h.jour}</span>
+        <Input
+          type="time"
+          value={h.ouverture}
+          onChange={(e) => {
+            const newHoraires = [...horaires];
+            newHoraires[index].ouverture = e.target.value;
+            setHoraires(newHoraires);
+          }}
+          className="w-28"
+        />
+        <span className="text-gray-400">–</span>
+        <Input
+          type="time"
+          value={h.fermeture}
+          onChange={(e) => {
+            const newHoraires = [...horaires];
+            newHoraires[index].fermeture = e.target.value;
+            setHoraires(newHoraires);
+          }}
+          className="w-28"
+        />
+        <label className="flex items-center gap-1 text-sm text-gray-500">
+          <input
+            type="checkbox"
+            checked={h.ferme}
+            onChange={(e) => {
+              const newHoraires = [...horaires];
+              newHoraires[index].ferme = e.target.checked;
+              setHoraires(newHoraires);
+            }}
           />
+          Fermé
+        </label>
+      </div>
+    ))}
+  </div>
+</div>
 
-          <Input
-            label="Adresse"
-            value={form.adresse}
-            onChange={(e) => setForm({ ...form, adresse: e.target.value })}
-          />
-
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Latitude"
-              value={form.latitude}
-              onChange={(e) => setForm({ ...form, latitude: e.target.value })}
-              placeholder="5.473°"
-            />
-            <Input
-              label="Longitude"
-              value={form.longitude}
-              onChange={(e) => setForm({ ...form, longitude: e.target.value })}
-              placeholder="10.417°"
-            />
-          </div>
-
-          <Textarea
-            label="En-tête personnalisé de facture"
-            value={form.enteteFacture}
-            onChange={(e) => setForm({ ...form, enteteFacture: e.target.value })}
-            placeholder="Total Bafoussam Centre — Distribution agréée de gaz domestique"
-            rows={2}
-          />
-
-          <Textarea
-            label="Pied de facture"
-            value={form.piedFacture}
-            onChange={(e) => setForm({ ...form, piedFacture: e.target.value })}
-            placeholder="Merci de votre confiance"
-            rows={2}
-          />
-
-          {/* Horaires *///}
-          
-          /*
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">Horaires d'ouverture</h3>
-            <div className="space-y-2">
-              {horaires.map((h, index) => (
-                <div key={h.jour} className="flex items-center gap-3">
-                  <span className="w-24 text-sm font-medium text-gray-600">{h.jour}</span>
-                  <Input
-                    type="time"
-                    value={h.ouverture}
-                    onChange={(e) => {
-                      const newHoraires = [...horaires];
-                      newHoraires[index].ouverture = e.target.value;
-                      setHoraires(newHoraires);
-                    }}
-                    className="w-28"
-                  />
-                  <span className="text-gray-400">–</span>
-                  <Input
-                    type="time"
-                    value={h.fermeture}
-                    onChange={(e) => {
-                      const newHoraires = [...horaires];
-                      newHoraires[index].fermeture = e.target.value;
-                      setHoraires(newHoraires);
-                    }}
-                    className="w-28"
-                  />
-                  <label className="flex items-center gap-1 text-sm text-gray-500">
-                    <input
-                      type="checkbox"
-                      checked={h.ferme}
-                      onChange={(e) => {
-                        const newHoraires = [...horaires];
-                        newHoraires[index].ferme = e.target.checked;
-                        setHoraires(newHoraires);
-                      }}
-                    />
-                    Fermé
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <Button type="submit" variant="primary" fullWidth loading={loading}>
-            Enregistrer les modifications
-          </Button>
-        </form>
-      </Card>
-    </div>
-  );
+<Button type="submit" variant="primary" fullWidth loading={loading}>
+  Enregistrer les modifications
+</Button>
+</form>
+</Card>
+</div>
+);
 };
 
 export default ParametresAgencePage;
@@ -251,6 +251,7 @@ const ParametresAgencePage = () => {
     adresse: '',
     latitude: '',
     longitude: '',
+    logoFacture: '',
     enteteFacture: '',
     piedFacture: '',
   });
@@ -270,8 +271,14 @@ const ParametresAgencePage = () => {
         adresse: data.adresse || '',
         latitude: data.latitude || '',
         longitude: data.longitude || '',
+        logoFacture: data.logoFacture || '',
         enteteFacture: data.enteteFacture || '',
         piedFacture: data.piedFacture || '',
+        // AJOUTER pour affichage info (optionnel)
+        enseigneNom: data.enseigne?.nom || '',
+        villeNom: data.ville?.nom || '',
+        statut: data.statut || '',
+
       });
     } catch (error) {
       console.error('Erreur de chargement', error);
@@ -283,6 +290,12 @@ const ParametresAgencePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    // AJOUTER validation email
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setError('Veuillez entrer une adresse email valide');
+      return;
+    }
+
     setSaving(true);
 
     try {

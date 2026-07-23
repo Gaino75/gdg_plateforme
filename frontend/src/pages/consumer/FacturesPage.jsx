@@ -8,6 +8,7 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Loader from '../../components/ui/Loader';
 import { formatDateTime, formatPrice } from '../../utils/formatters';
+import { API } from '../../constants/api';
 
 const FacturesPage = () => {
   const { user } = useAuth();
@@ -21,19 +22,36 @@ const FacturesPage = () => {
   const fetchFactures = async () => {
     try {
       // TODO: Remplacer par l'endpoint réel
-      // const response = await axiosInstance.get(API.VENTES.FACTURES_CONSOMMATEUR(user.id));
+      const response = await axiosInstance.get(API.VENTES.FACTURES_CONSOMMATEUR(user.id));
+      setFactures(response.data);
       // Pour la démo
+      /*
       setFactures([
         { id: 1, numero: 'F-2026-0881', montant: 7000, date: '2026-07-09T18:12:00', statut: 'payée' },
         { id: 2, numero: 'F-2026-0879', montant: 13000, date: '2026-07-09T09:03:00', statut: 'payée' },
         { id: 3, numero: 'F-2026-0865', montant: 84000, date: '2026-07-08T16:48:00', statut: 'payée' },
-      ]);
+      ]);*/
     } catch (error) {
       console.error('Erreur de chargement des factures', error);
     } finally {
       setLoading(false);
     }
   };
+const handleDownload = async(factureId, numero) =>{
+  try{
+    const response = await axiosInstance.get(API.VENTES.FACTURE(factureId), {responseType:'blob'});//pdf
+const url = window.URL.createObjectURL(new Blob([response.data]));
+const link = document.createElement('a');
+link.href=url;
+link.setAttribute('download', `facture-${numero}.pdf`);
+document.body.appendChild(link);
+link.click();
+link.remove();
+window.URL.revokeObjectURL(url);
+  } catch(error){
+    console.error('Erreur de telechargement',error);
+  }
+};
 
   if (loading) return <Loader className="min-h-[60vh]" />;
 
@@ -69,7 +87,7 @@ const FacturesPage = () => {
                   </div>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button variant="outline" size="sm" className="gap-2" onClick={()=> handleDownload(factureId,facture.numero)}>
                 <Download size={16} /> PDF
               </Button>
             </Card>

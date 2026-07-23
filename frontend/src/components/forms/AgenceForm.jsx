@@ -52,7 +52,20 @@ const AgenceForm = ({ initialData, onSubmit, loading = false, isEdit = false }) 
     }
     onSubmit(form);
   };
-
+  // AJOUTER: Formatage pour le backend
+  const agenceData = {
+    nom: form.nom,
+    adresse: form.adresse,
+    latitude: form.latitude ? parseFloat(form.latitude) : null,
+    longitude: form.longitude ? parseFloat(form.longitude) : null,
+    telephone: form.telephone || null,
+    email: form.email || null,
+    enseigneId: form.enseigneId,
+    villeId: form.villeId,
+    horaires: []  // Optionnel
+  };
+  
+  onSubmit(agenceData);  // Utiliser le format correct
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && <Alert type="error" message={error} />}

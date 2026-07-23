@@ -15,4 +15,7 @@ public class AuthResponse {
     private String nom;
     private String prenom;
     private String email;
+    // ajouter
+    private Long agenceId;
+    private String telephone;
 }

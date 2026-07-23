@@ -13,9 +13,9 @@ spring:
   #   driver-class-name: org.postgresql.Driver
   
   datasource:
-   url: jdbc:postgresql://localhost:5432/gdg_auth
+   url: jdbc:postgresql://localhost:5432/gdg_plateforme
    username: postgres
-   password: JOJOloj
+   password: 12345
    driver-class-name: org.postgresql.Driver
   
   jpa:

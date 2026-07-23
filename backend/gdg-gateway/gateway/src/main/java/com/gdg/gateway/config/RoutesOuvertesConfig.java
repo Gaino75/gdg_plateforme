@@ -32,10 +32,18 @@ public class RoutesOuvertesConfig {
             "/api/agences/ville/{villeId}", // Filtrer par ville
             "/api/agences/enseigne/{enseigneId}", // Filtrer par enseigne
             "/api/enseignes",
+            "/api/enseignes/**",
             "/api/enseignes/{id}",
             "/api/enseignes/actives",
             "/api/villes",
             "/api/villes/{id}",
+            "/api/agences/statistiques", // Statistiques publiques sur les agences
+            "/api/agences/enseigne/**", // Filtrer par enseigne
+            "/api/agences/ville/**", // Filtrer par ville
+            "/api/agences/recherche", // Recherche d'agences par nom, ville, enseigne, etc.
+        
+
+            //"/api/agences/enseigne/{enseigneId}/actives", // Filtrer par enseigne et actives
 
             // ============================================================
             // STOCK — Routes publiques (lecture seule)

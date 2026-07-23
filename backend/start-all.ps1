@@ -10,7 +10,7 @@
        if($LASTEXITCODE -eq 0){
         $dockerReady = $true
        }else{
-        $tentatives = $tentatives + 1
+        $tentative = $tentative + 1
         Write-Host "Docker pas encore pret,attente....($tentative/15)" -foregroundColor Yellow
         Start-Sleep -Seconds 5
        }
@@ -21,7 +21,16 @@
  }
 
  Write-Host "Nettoyage :suppression de l'ancien conteneur RabbitMQ s'il existe..." -ForegroundColor Cyan
- docker rm -f gpg-rabbitmq > $null 2>&1
+ 
+# pour utiliser Rabbit MQ avec docker si on l'a installer avec Docker
+docker rm -f gpg-rabbitmq > $null 2>&1
+
+#Demarrage plutoy RabbitMQ sevice Windows avec ces commentees lignes en dessous si on a installer plutot le .exe rabbit
+ # write-Host "Docker est pret.Demarrage de RabbitMQ Service Windows...." -ForegroundColor Cyan
+# net start RabbitMQ
+# Start-Sleep _Seconds 8
+
+
   
 write-Host "Docker est pret.Demarrage de RabbitMQ et PostgreSQL...." -ForegroundColor Cyan
 docker compose -f ..\docker-compose.yml up -d rabbitmq postgres
@@ -34,13 +43,14 @@ $services =@(
     
      "gdg-service-admin\gdg-service-admin",
      "gdg-service-agence",
-     "gdg-service-auth\gdg-service-auth"
+     "gdg-service-auth\gdg-service-auth",
      "gdg-service-notification",
      "gdg-service-paiement",
      "gdg-service-reservations",
      "gdg-service-stock",
      "gdg-service-ventes",
-     "gdg-gateway\gateway"
+     "gdg-gateway\gateway",
+     "gdg-config-server"
 
 )
 
@@ -54,4 +64,4 @@ $services =@(
         
     }
 
-    Write-Host "'nTous les service sont en cours lancement,chacun dans sa propre fenetre." -FOregroundColor Green
+    Write-Host "Tous les services sont en cours lancement,chacun dans sa propre fenetre." -FOregroundColor Green

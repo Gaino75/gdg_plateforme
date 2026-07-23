@@ -61,6 +61,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      const token = localStorage.getItem('gdg_token');
       localStorage.removeItem('gdg_token');
       localStorage.removeItem('gdg_user');
       window.location.href = '/connexion';

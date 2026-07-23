@@ -27,7 +27,7 @@ export default function RegisterConsumerPage() {
     }
     setLoading(true);
     try {
-      await axiosInstance.post(API.AUTH.REGISTER_CONSUMER, form);
+      await axiosInstance.post(API.AUTH.REGISTER_CONSUMER, {...form, dateNaissance: form.dateNaissance || null,});
       navigate('/connexion');
     } catch (err) {
       setError(err.response?.data?.message || 'Une erreur est survenue.');

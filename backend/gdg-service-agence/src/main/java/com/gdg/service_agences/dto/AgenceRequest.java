@@ -25,6 +25,14 @@ public class AgenceRequest {
     @Size(max = 20, message = "Le téléphone ne doit pas dépasser 20 caractères")
     private String telephone;
 
+        @Size(max = 150, message = "Le logo doit etre une URL valide et ne doit pas dépasser 150 caractères")
+    private String logoFacture;
+
+        @Size(max = 150, message = "Le pied de facture doit etre une URL valide et ne doit pas dépasser 150 caractères")
+    private String piedFacture;
+
+        @Size(max = 150, message = "L'entête de facture doit etre une URL valide et ne doit pas dépasser 150 caractères")
+    private String enteteFacture;
     @Size(max = 150, message = "L'email ne doit pas dépasser 150 caractères")
     private String email;
 

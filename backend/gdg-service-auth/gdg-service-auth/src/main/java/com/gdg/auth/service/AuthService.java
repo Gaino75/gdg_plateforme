@@ -36,8 +36,7 @@ public class AuthService {
     private TentativeConnexionRepository tentativeConnexionRepository;
 
     @Autowired
-private RabbitTemplate rabbitTemplate;
-
+    private RabbitTemplate rabbitTemplate;
 
     // ── INSCRIPTION ──────────────────────────────
     public AuthResponse register(RegisterRequest request) {
@@ -119,18 +118,22 @@ private RabbitTemplate rabbitTemplate;
             utilisateur.getId(),
             utilisateur.getRole().name()
         );
-
+Long agenceId = null;
+if (utilisateur instanceof Distributeur){
+    agenceId = ((Distributeur) utilisateur).getAgenceId();
+}
         return new AuthResponse(
             utilisateur.getId(),
             token,
             utilisateur.getRole().name(),
             utilisateur.getNom(),
             utilisateur.getPrenom(),
-            utilisateur.getEmail()
+            utilisateur.getEmail(),
+                            agenceId,
+                utilisateur.getTelephone()
         );
     }
 
-    
     // ── CONNEXION ────────────────────────────────
     public AuthResponse login(LoginRequest request,
                               String adresseIp) {
@@ -177,14 +180,19 @@ private RabbitTemplate rabbitTemplate;
                 utilisateur.getId(),
                 utilisateur.getRole().name()
             );
-
+Long agenceId = null;
+if (utilisateur instanceof Distributeur){
+    agenceId = ((Distributeur) utilisateur).getAgenceId();
+}
             return new AuthResponse(
                 utilisateur.getId(),
                 token,
                 utilisateur.getRole().name(),
                 utilisateur.getNom(),
                 utilisateur.getPrenom(),
-                utilisateur.getEmail()
+                utilisateur.getEmail(),
+                agenceId,
+                utilisateur.getTelephone()
             );
 
         } catch (RuntimeException e) {
@@ -224,11 +232,11 @@ private RabbitTemplate rabbitTemplate;
 
         // Chercher utilisateur avec ce token
         Utilisateur utilisateur = utilisateurRepository
-            .findByTokenVerification(token)
-            .orElseThrow(() -> new RuntimeException(
-                "Token invalide"));
+                .findByTokenVerification(token)
+                .orElseThrow(() -> new RuntimeException(
+                        "Token invalide"));
 
-      // Vérifier expiration
+        // Vérifier expiration
         if (utilisateur.getDateExpirationToken()
                 .isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Token expiré");
@@ -247,30 +255,29 @@ private RabbitTemplate rabbitTemplate;
     public ProfilResponse getProfilById(Long Id) {
 
         Utilisateur u = utilisateurRepository
-            .findById(Id)
-            .orElseThrow(() -> new RuntimeException(
-                "Utilisateur non trouvé"));
+                .findById(Id)
+                .orElseThrow(() -> new RuntimeException(
+                        "Utilisateur non trouvé"));
 
         return new ProfilResponse(
-            u.getId(),
-            u.getNom(),
-            u.getPrenom(),
-            u.getEmail(),
-            u.getTelephone(),
-            u.getRole().name(),
-            u.getStatut().name(),
-            u.getDateInscription(),
-            u.getEmailVerifie()
-        );
+                u.getId(),
+                u.getNom(),
+                u.getPrenom(),
+                u.getEmail(),
+                u.getTelephone(),
+                u.getRole().name(),
+                u.getStatut().name(),
+                u.getDateInscription(),
+                u.getEmailVerifie());
     }
 
     // ── FORGOT PASSWORD ──────────────────────────
     public String forgotPassword(ForgotPasswordRequest request) {
 
         Utilisateur utilisateur = utilisateurRepository
-            .findByEmail(request.getEmail())
-            .orElseThrow(() -> new RuntimeException(
-                "Email non trouvé"));
+                .findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException(
+                        "Email non trouvé"));
 
         // Générer token reset
         String resetToken = UUID.randomUUID().toString();
@@ -278,22 +285,20 @@ private RabbitTemplate rabbitTemplate;
         // Stocker dans tokenVerification (réutilisation)
         utilisateur.setTokenVerification(resetToken);
         utilisateur.setDateExpirationToken(
-            LocalDateTime.now().plusMinutes(15));
+                LocalDateTime.now().plusMinutes(15));
         utilisateurRepository.save(utilisateur);
 
-        //  Envoyer email via Service Notifications
+        // Envoyer email via Service Notifications
         // Ex: http://gpg.cm/reset-password?token=resetToken
 
         // Publier événement reset password
-rabbitTemplate.convertAndSend(
-    RabbitMQConfig.EXCHANGE,
-    RabbitMQConfig.KEY_PASSWORD_RESET,
-    new PasswordResetEvent(
-        utilisateur.getEmail(),
-        utilisateur.getNom(),
-        resetToken
-    )
-);
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE,
+                RabbitMQConfig.KEY_PASSWORD_RESET,
+                new PasswordResetEvent(
+                        utilisateur.getEmail(),
+                        utilisateur.getNom(),
+                        resetToken));
 
         return "Token de reset : " + resetToken;
     }
@@ -303,9 +308,9 @@ rabbitTemplate.convertAndSend(
 
         // Chercher utilisateur avec ce token
         Utilisateur utilisateur = utilisateurRepository
-            .findByTokenVerification(request.getResetToken())
-            .orElseThrow(() -> new RuntimeException(
-                "Token invalide ou expiré"));
+                .findByTokenVerification(request.getResetToken())
+                .orElseThrow(() -> new RuntimeException(
+                        "Token invalide ou expiré"));
 
         // Vérifier expiration
         if (utilisateur.getDateExpirationToken()
@@ -315,7 +320,7 @@ rabbitTemplate.convertAndSend(
 
         // Mettre à jour mot de passe
         utilisateur.setMotDePasse(
-            passwordEncoder.encode(request.getNouveauMotDePasse()));
+                passwordEncoder.encode(request.getNouveauMotDePasse()));
         utilisateur.setTokenVerification(null);
         utilisateur.setDateExpirationToken(null);
         utilisateurRepository.save(utilisateur);
@@ -324,15 +329,15 @@ rabbitTemplate.convertAndSend(
     }
 
     // ── EXTRAIRE EMAIL DU TOKEN ───────────────────
-   
 
     public List<Utilisateur> getAllUtilisateurs() {
         return utilisateurRepository.findAll();
     }
-       // ── METHODE PRIVEE : Enregistrer tentative ────
+
+    // ── METHODE PRIVEE : Enregistrer tentative ────
     private void enregistrerTentative(String email,
-                                       String ip,
-                                       boolean succes) {
+            String ip,
+            boolean succes) {
         TentativeConnexion tentative = new TentativeConnexion();
         tentative.setEmail(email);
         tentative.setAdresseIp(ip);
@@ -341,43 +346,39 @@ rabbitTemplate.convertAndSend(
         tentativeConnexionRepository.save(tentative);
     }
 
-
     public String extractRoleFromToken(String token) {
         return jwtUtil.extractRole(token);
     }
 
-//suspendre un utilisateur
+    // suspendre un utilisateur
     public String suspendreUtilisateur(long id, String motif) {
-        Utilisateur utilisateur=utilisateurRepository.findById(id)
-                                                      .orElseThrow(()->new RuntimeException("utilisateur non trouver"));
+        Utilisateur utilisateur = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("utilisateur non trouver"));
         utilisateur.setStatut(Utilisateur.Statut.SUSPENDU);
         utilisateurRepository.save(utilisateur);
-        return "Utilisateur suspendu.Motif:" + motif ;
-        
+        return "Utilisateur suspendu.Motif:" + motif;
+
     }
 
-//Reactive un utilisateur
+    // Reactive un utilisateur
     public String reactiverUtilisateur(long id) {
-         Utilisateur utilisateur=utilisateurRepository.findById(id)
-                                                      .orElseThrow(()->new RuntimeException("utilisateur non trouver"));
+        Utilisateur utilisateur = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("utilisateur non trouver"));
         utilisateur.setStatut(Utilisateur.Statut.ACTIF);
         utilisateurRepository.save(utilisateur);
         return "Utilisateur reactiver avec succes";
-        
-        
-    }
 
+    }
 
     public String supprimerUtilisateur(Long id) {
-         Utilisateur utilisateur=utilisateurRepository.findById(id)
-                                                      .orElseThrow(()->new RuntimeException("utilisateur non trouver"));
-        
-        //inutile car pas besoin de mettre le statut a ACTIF avant de supprimer un utilisateur                                              utilisateur.setStatut(Utilisateur.Statut.ACTIF);
+        Utilisateur utilisateur = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("utilisateur non trouver"));
+
+        // inutile car pas besoin de mettre le statut a ACTIF avant de supprimer un
+        // utilisateur utilisateur.setStatut(Utilisateur.Statut.ACTIF);
         utilisateurRepository.delete(utilisateur);
         return "Utilisateur supprimer avec succes";
-        
-        
+
     }
 
-    
-}       
+}
