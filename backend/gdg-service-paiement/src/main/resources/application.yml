@@ -1,6 +1,6 @@
 
 server:
-  port: 8086
+  port: ${PORT:8086}
 
 spring:
   application:
@@ -14,9 +14,9 @@ spring:
   #   password: gdg@2026!Secure
   #   driver-class-name: org.postgresql.Driver
   datasource:
-    url: jdbc:postgresql://localhost:5432/gdg_plateforme
-    username: postgres
-    password: 12345
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:12345}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -31,10 +31,10 @@ spring:
         format_sql: true
         default_schema: paiement_schema
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 
 logging:
   level:
@@ -43,7 +43,7 @@ logging:
 
 services:
   reservations:
-    url: http://localhost:8085
+    url: ${RESERVATIONS_SERVICE_URL:http://localhost:8085}
 
 # server:
 #   port: 8086

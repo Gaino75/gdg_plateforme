@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "administrateur", schema = "auth_schema")
+@DiscriminatorValue("ADMIN")
 public class Administrateur extends Utilisateur {
 
     // STANDARD = admin normal

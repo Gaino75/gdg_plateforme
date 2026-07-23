@@ -1,5 +1,5 @@
 server:
-  port: 8088
+  port: ${PORT:8088}
 
 spring:
   application:
@@ -14,9 +14,9 @@ spring:
   #   driver-class-name: org.postgresql.Driver
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/gdg_plateforme
-    username: postgres
-    password: 12345
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:12345}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -38,14 +38,13 @@ logging:
 
 gdg:
   agences:
-    url: http://localhost:8082
+    url: ${AGENCES_SERVICE_URL:http://localhost:8082}
   auth:
-    url: http://localhost:8081
+    url: ${AUTH_SERVICE_URL:http://localhost:8081}
   stock:
-    url: http://localhost:8083
+    url: ${STOCK_SERVICE_URL:http://localhost:8083}
   notifications:
-    url: http://localhost:8087
-    
+    url: ${NOTIFICATIONS_SERVICE_URL:http://localhost:8087}
 
 # server:
 #   port: 8088

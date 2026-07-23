@@ -41,7 +41,7 @@ public abstract class Utilisateur {
     private String telephone;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(name = "role", nullable = false, length = 20, insertable = false, updatable = false)
     private Role role;
 
     @Enumerated(EnumType.STRING)

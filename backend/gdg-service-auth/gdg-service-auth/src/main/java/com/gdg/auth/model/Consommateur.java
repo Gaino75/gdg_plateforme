@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "consommateur", schema = "auth_schema")
+@DiscriminatorValue("CONSOMMATEUR")
 public class Consommateur extends Utilisateur {
 
     @Column(name = "ville_residence", length = 100)

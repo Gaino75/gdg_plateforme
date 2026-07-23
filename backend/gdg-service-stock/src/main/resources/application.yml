@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: ${PORT:8083}
 
 spring:
   application:
@@ -12,9 +12,9 @@ spring:
     #   driver-class-name: org.postgresql.Driver
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/gdg_plateforme
-    username: postgres
-    password: 12345
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:12345}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 20000
@@ -35,10 +35,10 @@ spring:
     import: "optional:configserver:"
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 
 logging:
   level:
@@ -47,4 +47,4 @@ logging:
 
 gdg:
   auth:
-    url: http://localhost:8081
+    url: ${AUTH_SERVICE_URL:http://localhost:8081}

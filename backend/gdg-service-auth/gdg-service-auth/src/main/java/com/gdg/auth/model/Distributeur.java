@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "distributeur", schema = "auth_schema")
+@DiscriminatorValue("DISTRIBUTEUR")
 public class Distributeur extends Utilisateur {
 
     // Rempli après validation de l'agence par l'admin

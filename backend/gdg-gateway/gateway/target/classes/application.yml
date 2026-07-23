@@ -3,7 +3,7 @@
 # ================================================================
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -14,47 +14,47 @@ spring:
       routes:
 
         - id: service-auth
-          uri: http://localhost:8081
+          uri: ${AUTH_SERVICE_URL:http://localhost:8081}
           predicates:
             - Path=/auth/**
 
         - id: service-agences
-          uri: http://localhost:8082
+          uri: ${AGENCES_SERVICE_URL:http://localhost:8082}
           predicates:
             - Path=/api/agences/**, /api/enseignes/**, /api/villes/**
 
         - id: service-stock
-          uri: http://localhost:8083
+          uri: ${STOCK_SERVICE_URL:http://localhost:8083}
           predicates:
             - Path=/api/stocks/**, /api/categories/**
 
         - id: service-ventes
-          uri: http://localhost:8084
+          uri: ${VENTES_SERVICE_URL:http://localhost:8084}
           predicates:
             - Path=/api/ventes/**, /api/approvisionnements/**, /api/factures/**
 
         - id: service-reservations
-          uri: http://localhost:8085
+          uri: ${RESERVATIONS_SERVICE_URL:http://localhost:8085}
           predicates:
             - Path=/api/reservations/**
 
         - id: service-paiement
-          uri: http://localhost:8086
+          uri: ${PAIEMENT_SERVICE_URL:http://localhost:8086}
           predicates:
             - Path=/api/paiements/**
 
         - id: service-notifications
-          uri: http://localhost:8087
+          uri: ${NOTIFICATIONS_SERVICE_URL:http://localhost:8087}
           predicates:
             - Path=/api/notifications/**, /api/abonnements/**, /api/signalements/**
 
         - id: service-admin
-          uri: http://localhost:8088
+          uri: ${ADMIN_SERVICE_URL:http://localhost:8088}
           predicates:
             - Path=/admin/**
 
 jwt:
-  secret: sage-meliodas-GAZ-2026-secret-key-secure-2556bits
+  secret: ${JWT_SECRET:$sage-meliodas-GAZ-2026-secret-key-secure-2556bits}
 
 logging:
   level:

@@ -1,5 +1,5 @@
 server:
-  port: 8087
+  port: ${PORT:8087}
 
 spring:
   application:
@@ -15,9 +15,9 @@ spring:
   
   # Configuration pour la base de données locale (TEST)
   datasource:
-    url: jdbc:postgresql://localhost:5432/gdg_plateforme
-    username: postgres
-    password: 12345
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:12345}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -44,16 +44,16 @@ spring:
         default_schema: notifications_schema
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 
   mail:
     host: smtp.gmail.com
     port: 587
-    username: sagemeliodas@gmail.com
-    password: apqa zjir ifjm ryxg
+    username: ${MAIL_USERNAME:sagemeliodas@gmail.com}
+    password: ${MAIL_PASSWORD:apqa zjir ifjm ryxg}
     properties:
       mail:
         smtp:
@@ -65,7 +65,7 @@ spring:
 # JWT
 # ============================================================
 jwt:
-  secret: sage-meliodas-GAZ-2026-secret-key-secure-256bits
+  secret: ${JWT_SECRET:sage-meliodas-GAZ-2026-secret-key-secure-256bits}
 
 # ============================================================
 # TWILIO (pour SMS) - Commenté car non configuré
