@@ -18,10 +18,15 @@ spring:
   #   password: gdg@2026!Secure
   #   driver-class-name: org.postgresql.Driver
 
+  # datasource:
+  #   url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
+  #   username: ${DATABASE_USERNAME:postgres}
+  #   password: ${DATABASE_PASSWORD:12345}
+
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:12345}
+    url: ${DATABASE_URL:jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres}
+    username: ${DATABASE_USERNAME:postgres.lfndwsyzicnktfxmgxhw}
+    password: ${DATABASE_PASSWORD:gdg@2026!Secure}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -35,12 +40,20 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         default_schema: auth_schema
-  rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}
-    port: ${RABBITMQ_PORT:5672}
-    username: ${RABBITMQ_USERNAME:guest}
-    password: ${RABBITMQ_PASSWORD:guest}
+  # rabbitmq:
+  #   host: ${RABBITMQ_HOST:localhost}
+  #   port: ${RABBITMQ_PORT:5672}
+  #   username: ${RABBITMQ_USERNAME:guest}
+  #   password: ${RABBITMQ_PASSWORD:guest}
 
+  rabbitmq:
+    host: ${RABBITMQ_HOST:rat.rmq2.cloudamqp.com}
+    port: ${RABBITMQ_PORT:5671}
+    username: ${RABBITMQ_USERNAME:gpnrsqnc}
+    password: ${RABBITMQ_PASSWORD:4-5og49Fz8TrFQzwJAd9cYmxPzdn2RtP}
+    virtual-host: ${RABBITMQ_VHOST:gpnrsqnc}
+    ssl:
+      enabled: ${RABBITMQ_SSL:true}
 jwt:
   secret: ${JWT_SECRET:$sage-meliodas-GAZ-2026-secret-key-secure-2556bits}
   expiration: ${JWT_EXPIRATION:3600000}

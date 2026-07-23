@@ -34,8 +34,8 @@ export default axiosInstance;
 
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-
+// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';//cas en local
+const API_URL = import.meta.env.VITE_API_URL || '';
 const axiosInstance = axios.create({
   baseURL: API_URL,
   timeout: 30000,

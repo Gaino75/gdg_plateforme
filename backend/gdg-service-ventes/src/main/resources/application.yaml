@@ -5,18 +5,17 @@ spring:
   cloud:
     config:
       enabled: false
-
-  # datasource:
-  #   url: jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres
-  #   username: postgres.lfndwsyzicnktfxmgxhw
-  #   password: gdg@2026!Secure
-  #   driver-class-name: org.postgresql.Driver
-  
+      
   datasource:
-   url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
-   username: ${DATABASE_USERNAME:postgres}
-   password: ${DATABASE_PASSWORD:12345}
-   driver-class-name: org.postgresql.Driver
+    url: ${DATABASE_URL:jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres}
+    username: ${DATABASE_USERNAME:postgres.lfndwsyzicnktfxmgxhw}
+    password: ${DATABASE_PASSWORD:gdg@2026!Secure}
+  
+  # datasource:
+  #  url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
+  #  username: ${DATABASE_USERNAME:postgres}
+  #  password: ${DATABASE_PASSWORD:12345}
+    driver-class-name: org.postgresql.Driver
   
   jpa:
     hibernate:

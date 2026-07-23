@@ -4,34 +4,29 @@ server:
 spring:
   application:
     name: gdg-service-notifications
-  
+
   cloud:
     config:
       enabled: false
-  
+
   # ============================================================
   # DATASOURCE - Utiliser UNE des deux configurations
   # ============================================================
-  
+
   # Configuration pour la base de données locale (TEST)
+  # datasource:
+  #   url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
+  #   username: ${DATABASE_USERNAME:postgres}
+  #   password: ${DATABASE_PASSWORD:12345}
+  # Configuration pour Supabase en ligne (PRODUCTION) - Commentée
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:12345}
+    url: ${DATABASE_URL:jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres}
+    username: ${DATABASE_USERNAME:postgres.lfndwsyzicnktfxmgxhw}
+    password: ${DATABASE_PASSWORD:gdg@2026!Secure}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
-  
-  # Configuration pour Supabase en ligne (PRODUCTION) - Commentée
-  # datasource:
-  #   url: jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres
-  #   username: postgres.lfndwsyzicnktfxmgxhw
-  #   password: gdg@2026!Secure
-  #   driver-class-name: org.postgresql.Driver
-  #   hikari:
-  #     maximum-pool-size: 10
-  #     minimum-idle: 2
 
   jpa:
     hibernate:
@@ -43,12 +38,20 @@ spring:
         format_sql: true
         default_schema: notifications_schema
 
-  rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}
-    port: ${RABBITMQ_PORT:5672}
-    username: ${RABBITMQ_USERNAME:guest}
-    password: ${RABBITMQ_PASSWORD:guest}
+  # rabbitmq:
+  #   host: ${RABBITMQ_HOST:localhost}
+  #   port: ${RABBITMQ_PORT:5672}
+  #   username: ${RABBITMQ_USERNAME:guest}
+  #   password: ${RABBITMQ_PASSWORD:guest}
 
+  rabbitmq:
+    host: ${RABBITMQ_HOST:rat.rmq2.cloudamqp.com}
+    port: ${RABBITMQ_PORT:5671}
+    username: ${RABBITMQ_USERNAME:gpnrsqnc}
+    password: ${RABBITMQ_PASSWORD:4-5og49Fz8TrFQzwJAd9cYmxPzdn2RtP}
+    virtual-host: ${RABBITMQ_VHOST:gpnrsqnc}
+    ssl:
+      enabled: ${RABBITMQ_SSL:true}
   mail:
     host: smtp.gmail.com
     port: 587
@@ -65,15 +68,15 @@ spring:
 # JWT
 # ============================================================
 jwt:
-  secret: ${JWT_SECRET:sage-meliodas-GAZ-2026-secret-key-secure-256bits}
+  secret: ${JWT_SECRET:sage-meliodas-GAZ-2026-secret-key-secure-2556bits}
 
 # ============================================================
 # TWILIO (pour SMS) - Commenté car non configuré
 # ============================================================
-# twilio:
-#   account-sid: ${TWILIO_ACCOUNT_SID:}
-#   auth-token: ${TWILIO_AUTH_TOKEN:}
-#   phone-number: ${TWILIO_PHONE_NUMBER:}
+twilio:
+  account-sid: ${TWILIO_ACCOUNT_SID:}
+  auth-token: ${TWILIO_AUTH_TOKEN:}
+  phone-number: ${TWILIO_PHONE_NUMBER:}
 
 # ============================================================
 # LOGGING

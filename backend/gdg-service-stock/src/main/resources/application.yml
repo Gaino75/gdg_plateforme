@@ -4,17 +4,16 @@ server:
 spring:
   application:
     name: gdg-service-stock
-        
-    # datasource:
-    #   url: jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres
-    #   username: postgres.lfndwsyzicnktfxmgxhw
-    #   password: gdg@2026!Secure
-    #   driver-class-name: org.postgresql.Driver
 
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:12345}
+    url: ${DATABASE_URL:jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres}
+    username: ${DATABASE_USERNAME:postgres.lfndwsyzicnktfxmgxhw}
+    password: ${DATABASE_PASSWORD:gdg@2026!Secure}
+
+  # datasource:
+  #   url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gdg_plateforme}
+  #   username: ${DATABASE_USERNAME:postgres}
+  #   password: ${DATABASE_PASSWORD:12345}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 20000
@@ -34,11 +33,20 @@ spring:
   config:
     import: "optional:configserver:"
 
+  # rabbitmq:
+  #   host: ${RABBITMQ_HOST:localhost}
+  #   port: ${RABBITMQ_PORT:5672}
+  #   username: ${RABBITMQ_USERNAME:guest}
+  #   password: ${RABBITMQ_PASSWORD:guest}
+
   rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}
-    port: ${RABBITMQ_PORT:5672}
-    username: ${RABBITMQ_USERNAME:guest}
-    password: ${RABBITMQ_PASSWORD:guest}
+    host: ${RABBITMQ_HOST:rat.rmq2.cloudamqp.com}
+    port: ${RABBITMQ_PORT:5671}
+    username: ${RABBITMQ_USERNAME:gpnrsqnc}
+    password: ${RABBITMQ_PASSWORD:4-5og49Fz8TrFQzwJAd9cYmxPzdn2RtP}
+    virtual-host: ${RABBITMQ_VHOST:gpnrsqnc}
+    ssl:
+      enabled: ${RABBITMQ_SSL:true} 
 
 logging:
   level:
